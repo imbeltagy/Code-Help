@@ -27,7 +27,7 @@ const HomePage = () => {
   ];
 
   return (
-    <Stack pt={4} pb={4} spacing={4}>
+    <Stack pb={4} spacing={4}>
       {posts.map((post, i) => (
         <Post data={post} key={i} />
       ))}

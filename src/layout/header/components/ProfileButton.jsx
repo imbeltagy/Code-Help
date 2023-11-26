@@ -105,7 +105,6 @@ const ProfileButton = () => {
         // Style
         sx={{
           marginTop: "1rem",
-          "& .MuiPaper-root": { backgroundImage: "none" },
           "& .MuiList-root": { minWidth: "14rem" },
         }}
       >

@@ -121,7 +121,7 @@ const Notifications = () => {
         // Style
         sx={{
           marginTop: "1rem",
-          "& .MuiPaper-root": { backgroundImage: "none", width: "24rem" },
+          "& .MuiPaper-root": { width: "24rem" },
           "& .MuiList-root": { padding: 0 },
         }}
       >

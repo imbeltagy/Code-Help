@@ -1,4 +1,4 @@
-import { Container, Stack } from "@mui/material";
+import { Box, Container, Stack } from "@mui/material";
 import React from "react";
 import Sidebar from "./layout/sidebar/Index";
 import Header from "./layout/header/Index";
@@ -27,9 +27,9 @@ const Layout = () => {
       <Sidebar />
       <Container>
         <Header />
-        <main>
+        <Box pt={2} component="main">
           <Outlet />
-        </main>
+        </Box>
       </Container>
     </Stack>
   );

@@ -79,7 +79,9 @@ const Sidebar = () => {
   } else {
     return (
       <Drawer
-        sx={{ "& .MuiPaper-root": { backgroundColor: "background.default" } }}
+        sx={{
+          "& .MuiPaper-root": { backgroundImage: "none" },
+        }}
         anchor="left"
         open={isOpen}
         onClose={() => {

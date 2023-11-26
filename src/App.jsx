@@ -3,6 +3,7 @@ import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "./features/user/userSlice";
 import AppRoutes from "./AppRoutes";
+import "./app.css";
 
 function App() {
   const dispatch = useDispatch();
