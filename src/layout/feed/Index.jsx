@@ -1,4 +1,4 @@
-import { Container, Stack, styled } from "@mui/material";
+import { Stack } from "@mui/material";
 import Post from "./Post";
 
 const Feed = () => {
@@ -27,13 +27,11 @@ const Feed = () => {
   ];
 
   return (
-    <Container>
-      <Stack pt={2} pb={2} spacing={4}>
-        {posts.map((post, i) => (
-          <Post data={post} key={i} />
-        ))}
-      </Stack>
-    </Container>
+    <Stack pt={4} pb={4} spacing={4}>
+      {posts.map((post, i) => (
+        <Post data={post} key={i} />
+      ))}
+    </Stack>
   );
 };
 

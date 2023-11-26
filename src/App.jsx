@@ -1,32 +1,34 @@
-import { Box, CssBaseline, Stack, ThemeProvider, createTheme, styled } from "@mui/material";
-import LeftSidebar from "./components/leftSidebar/Index";
-import Feed from "./components/feed/Index";
-import Header from "./components/header/Index";
-import { useMemo, useState } from "react";
+import { Box, Container, CssBaseline, Stack, ThemeProvider, createTheme, styled } from "@mui/material";
+import Sidebar from "./layout/sidebar/Index";
+import Feed from "./layout/feed/Index";
+import Header from "./layout/header/Index";
+import { useMemo } from "react";
+import { useSelector } from "react-redux";
 
 function App() {
-  const [mode, setMode] = useState("light");
+  const mode = useSelector((state) => state.theme.mode);
 
-  const themeMode = useMemo(
+  const theme = useMemo(
     () =>
       createTheme({
         palette: {
           mode,
         },
+        spacing: (i) => `${i * 0.5}rem`,
       }),
     [mode]
   );
 
   return (
-    <ThemeProvider theme={themeMode}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box>
-        <Header />
-        <Stack direction="row">
-          <LeftSidebar mode={mode} setMode={setMode} />
+      <Stack direction="row">
+        <Sidebar />
+        <Container>
+          <Header />
           <Feed />
-        </Stack>
-      </Box>
+        </Container>
+      </Stack>
     </ThemeProvider>
   );
 }
