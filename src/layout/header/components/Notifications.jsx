@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import {
   Avatar,
   Badge,
@@ -16,6 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const StyledMenuItem = styled(MenuItem)({
   paddingTop: ".75rem",
@@ -27,7 +28,10 @@ const StyledDivider = styled(Divider)({
 });
 
 const Notifications = () => {
+  const navigate = useNavigate();
+
   const [notifications, setNotifications] = useState([]);
+  const [notificationsCount, setNotificationsCount] = useState(0);
 
   // Fake API
   useEffect(() => {
@@ -63,6 +67,7 @@ const Notifications = () => {
           date: "19 Mar",
         },
       ];
+      setNotificationsCount(8);
       setNotifications(ApiNots);
     }, 500);
   }, []);
@@ -90,10 +95,12 @@ const Notifications = () => {
         aria-expanded={open ? "true" : "undefined"}
         onClick={handleClick}
       >
-        <Badge badgeContent={8} color="error">
-          <NotificationsIcon />
+        <Badge badgeContent={notificationsCount} color="error">
+          <NotificationsOutlinedIcon />
         </Badge>
       </IconButton>
+
+      {/* Menu */}
       <Menu
         id={id}
         anchorEl={anchorEl}
@@ -151,7 +158,14 @@ const Notifications = () => {
 
         {/* All Notifications Button */}
         <StyledMenuItem disableRipple>
-          <Button variant="contained" fullWidth onClick={handleClose}>
+          <Button
+            onClick={() => {
+              handleClose();
+              navigate("/notifications");
+            }}
+            variant="contained"
+            fullWidth
+          >
             READ ALL NOTIFICATIONS
           </Button>
         </StyledMenuItem>

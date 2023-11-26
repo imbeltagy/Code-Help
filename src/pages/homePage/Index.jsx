@@ -1,7 +1,7 @@
 import { Stack } from "@mui/material";
 import Post from "./Post";
 
-const Feed = () => {
+const HomePage = () => {
   const posts = [
     {
       fullname: "Vegetarian Stir-Fry with Tofu",
@@ -35,4 +35,4 @@ const Feed = () => {
   );
 };
 
-export default Feed;
+export default HomePage;

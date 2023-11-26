@@ -15,6 +15,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "/src/features/user/userSlice";
+import { useNavigate } from "react-router-dom";
 
 // Profile Picture
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -36,13 +37,15 @@ const ProfilePic = ({ userImg, displayName, userState }) => (
 );
 
 // Menu
-const menuItems = [
-  { icon: <PersonOutlineOutlined />, text: "Profile" },
-  { icon: <GroupOutlined />, text: "Friends" },
+const menuLinks = [
+  { icon: <PersonOutlineOutlined />, text: "Profile", link: "/profile" },
+  { icon: <GroupOutlined />, text: "Friends", link: "/friends" },
 ];
 
 const ProfileButton = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+
   // Get User Data
   const [userImg, setUserImg] = useState("");
   const { displayName, userState } = useSelector((state) => state.user.userMainInfo);
@@ -127,13 +130,22 @@ const ProfileButton = () => {
 
         <Divider sx={{ mb: 1 }} />
 
-        {/* Items */}
-        {menuItems.map((e, i) => (
-          <MenuItem onClick={handleClose} key={i} sx={{ padding: ".5rem 1rem" }}>
-            <ListItemIcon>{e.icon}</ListItemIcon>
-            <ListItemText>{e.text}</ListItemText>
+        {/* Links */}
+        {menuLinks.map(({ text, icon, link }, i) => (
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              navigate(link);
+            }}
+            key={i}
+            sx={{ padding: ".5rem 1rem" }}
+          >
+            <ListItemIcon>{icon}</ListItemIcon>
+            <ListItemText>{text}</ListItemText>
           </MenuItem>
         ))}
+
+        {/* Logout Button */}
         <MenuItem
           onClick={() => {
             handleClose();

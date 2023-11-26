@@ -3,11 +3,12 @@ import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Swit
 import { useDispatch, useSelector } from "react-redux";
 import { change } from "/src/features/theme/themeSlice";
 import { close } from "/src/features/drawer/drawerSlice";
+import { NavLink } from "react-router-dom";
 
-const ListItems = [
-  { text: "Home Page", icon: <Home color="primary" />, link: "#" },
-  { text: "Friends Asks", icon: <Group color="primary" />, link: "#" },
-  { text: "Account Settings", icon: <Settings color="primary" />, link: "#" },
+const navigationLinks = [
+  { text: "Home Page", icon: <Home color="primary" />, link: "/" },
+  { text: "Friends Asks", icon: <Group color="primary" />, link: "/friends-asks" },
+  { text: "Account Settings", icon: <Settings color="primary" />, link: "/settings" },
 ];
 
 const Nav = () => {
@@ -20,9 +21,9 @@ const Nav = () => {
   return (
     <List sx={{ "& a": { color: "inherit" } }}>
       <Stack spacing={1}>
-        {ListItems.map(({ text, icon, link }, i) => (
-          <ListItem disablePadding component="a" href={link} key={i}>
-            <ListItemButton onClick={() => dispatch(close())} sx={{ pl: 2.6 }}>
+        {navigationLinks.map(({ text, icon, link }, i) => (
+          <ListItem disablePadding key={i}>
+            <ListItemButton component={NavLink} to={link} onClick={() => dispatch(close())} sx={{ pl: 2.6 }}>
               <ListItemIcon>{icon}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>

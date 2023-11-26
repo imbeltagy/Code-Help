@@ -1,10 +1,8 @@
-import { Container, CssBaseline, Stack, ThemeProvider, createTheme } from "@mui/material";
-import Sidebar from "./layout/sidebar/Index";
-import Feed from "./layout/feed/Index";
-import Header from "./layout/header/Index";
+import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "./features/user/userSlice";
+import AppRoutes from "./AppRoutes";
 
 function App() {
   const dispatch = useDispatch();
@@ -35,13 +33,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Stack direction="row">
-        <Sidebar />
-        <Container>
-          <Header />
-          <Feed />
-        </Container>
-      </Stack>
+      <AppRoutes />
     </ThemeProvider>
   );
 }

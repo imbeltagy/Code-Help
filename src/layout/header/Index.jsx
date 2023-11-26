@@ -1,11 +1,12 @@
 import styled from "@emotion/styled";
 import { DarkModeOutlined, Menu, Search, WbSunnyOutlined } from "@mui/icons-material";
-import { Button, IconButton, InputBase, Stack, Toolbar } from "@mui/material";
+import { Button, IconButton, InputBase, Link, Stack, Toolbar } from "@mui/material";
 import React, { useCallback } from "react";
 import Notifications from "./components/Notifications";
 import ProfileButton from "./components/ProfileButton";
 import { useDispatch, useSelector } from "react-redux";
 import { open } from "/src/features/drawer/drawerSlice";
+import { useNavigate } from "react-router-dom";
 
 // Styled Components
 const SearchBar = styled(Stack)(({ theme }) => ({
@@ -19,6 +20,7 @@ const SearchBar = styled(Stack)(({ theme }) => ({
 
 // Main Component
 const Header = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const isLogged = useSelector((state) => state.user.isLogged);
 
@@ -46,8 +48,10 @@ const Header = () => {
           </>
         ) : (
           <>
-            <Button>Login</Button>
-            <Button variant="outlined">Sign In</Button>
+            <Button onClick={() => navigate("/login")}>Login</Button>
+            <Button onClick={() => navigate("/signin")} variant="outlined">
+              Sign In
+            </Button>
           </>
         )}
       </Stack>
