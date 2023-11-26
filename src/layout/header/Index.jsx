@@ -1,10 +1,10 @@
 import styled from "@emotion/styled";
 import { DarkModeOutlined, Menu, Search, WbSunnyOutlined } from "@mui/icons-material";
-import { IconButton, InputBase, Stack, Toolbar } from "@mui/material";
+import { Button, IconButton, InputBase, Stack, Toolbar } from "@mui/material";
 import React, { useCallback } from "react";
 import Notifications from "./components/Notifications";
 import ProfileButton from "./components/ProfileButton";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { open } from "/src/features/drawer/drawerSlice";
 
 // Styled Components
@@ -20,6 +20,8 @@ const SearchBar = styled(Stack)(({ theme }) => ({
 // Main Component
 const Header = () => {
   const dispatch = useDispatch();
+  const isLogged = useSelector((state) => state.user.isLogged);
+
   return (
     <Toolbar sx={{ justifyContent: "space-between", paddingInline: "0 !important" }}>
       <Stack direction="row" alignItems="center">
@@ -35,12 +37,19 @@ const Header = () => {
         </SearchBar>
       </Stack>
 
-      {/* Icons */}
-      <Stack direction="row" alignItems="center">
-        {/* Notification */}
-        <Notifications />
-        {/* Avatar */}
-        <ProfileButton />
+      {/* Buttons */}
+      <Stack direction="row" alignItems="center" gap={1}>
+        {isLogged ? (
+          <>
+            <Notifications />
+            <ProfileButton />
+          </>
+        ) : (
+          <>
+            <Button>Login</Button>
+            <Button variant="outlined">Sign In</Button>
+          </>
+        )}
       </Stack>
     </Toolbar>
   );

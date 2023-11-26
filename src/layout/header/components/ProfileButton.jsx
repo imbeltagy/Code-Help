@@ -23,7 +23,8 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 // Profile Picture
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -35,9 +36,9 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-const ProfilePic = () => (
+const ProfilePic = ({ userImg, displayName }) => (
   <StyledBadge variant="dot" color="success">
-    <Avatar src="" alt="User Avatar" />
+    <Avatar src={userImg} alt={displayName} />
   </StyledBadge>
 );
 
@@ -49,6 +50,17 @@ const menuItems = [
 ];
 
 const ProfileButton = () => {
+  // Get User Data
+  const [userImg, setUserImg] = useState("");
+  const { displayName, userState } = useSelector((state) => state.user.userMainInfo);
+  const StatfulProfilePic = () => <ProfilePic userImg={userImg} displayName={displayName} userState={userState} />;
+
+  useEffect(() => {
+    // Get Minimized Image From API
+    setUserImg("");
+  }, []);
+
+  // Menu Functions
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = useCallback((event) => {
@@ -73,7 +85,7 @@ const ProfileButton = () => {
         onClick={handleClick}
         sx={{ padding: 0, marginLeft: "6px" }}
       >
-        <ProfilePic />
+        <StatfulProfilePic />
       </IconButton>
 
       {/* Menu */}
@@ -104,17 +116,17 @@ const ProfileButton = () => {
         {/* Header */}
         <ListItem sx={{ marginBottom: ".25rem" }}>
           <ListItemIcon>
-            <ProfilePic />
+            <StatfulProfilePic />
           </ListItemIcon>
           <ListItemText
             primary={
               <Typography variant="subtitle2" fontWeight="600" letterSpacing=".3px">
-                John Doe
+                {displayName}
               </Typography>
             }
             secondary={
               <Typography variant="caption" letterSpacing=".5px">
-                online
+                {userState}
               </Typography>
             }
           />
