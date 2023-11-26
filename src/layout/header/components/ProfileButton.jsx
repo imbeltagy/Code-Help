@@ -1,16 +1,5 @@
 import styled from "@emotion/styled";
-import {
-  AttachMoneyOutlined,
-  ChatBubbleOutlineOutlined,
-  EmailOutlined,
-  ExitToAppOutlined,
-  GroupOutlined,
-  HelpOutlineOutlined,
-  Notifications,
-  NotificationsOutlined,
-  PersonOutlineOutlined,
-  SettingsOutlined,
-} from "@mui/icons-material";
+import { ExitToAppOutlined, GroupOutlined, PersonOutlineOutlined } from "@mui/icons-material";
 import {
   Avatar,
   Badge,
@@ -24,7 +13,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "/src/features/user/userSlice";
 
 // Profile Picture
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -36,8 +26,11 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-const ProfilePic = ({ userImg, displayName }) => (
-  <StyledBadge variant="dot" color="success">
+const ProfilePic = ({ userImg, displayName, userState }) => (
+  <StyledBadge
+    variant="dot"
+    color={userState === "online" ? "success" : userState === "busy" ? "warning" : userState === "offline" && "error"}
+  >
     <Avatar src={userImg} alt={displayName} />
   </StyledBadge>
 );
@@ -46,10 +39,10 @@ const ProfilePic = ({ userImg, displayName }) => (
 const menuItems = [
   { icon: <PersonOutlineOutlined />, text: "Profile" },
   { icon: <GroupOutlined />, text: "Friends" },
-  { icon: <ExitToAppOutlined />, text: "Logout" },
 ];
 
 const ProfileButton = () => {
+  const dispatch = useDispatch();
   // Get User Data
   const [userImg, setUserImg] = useState("");
   const { displayName, userState } = useSelector((state) => state.user.userMainInfo);
@@ -141,6 +134,18 @@ const ProfileButton = () => {
             <ListItemText>{e.text}</ListItemText>
           </MenuItem>
         ))}
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            dispatch(logout());
+          }}
+          sx={{ padding: ".5rem 1rem" }}
+        >
+          <ListItemIcon>
+            <ExitToAppOutlined />
+          </ListItemIcon>
+          <ListItemText>Logout</ListItemText>
+        </MenuItem>
       </Menu>
     </>
   );
