@@ -15,7 +15,6 @@ const Nav = () => {
   const dispatch = useDispatch();
   const toggleMode = (e) => {
     e.currentTarget.checked === true ? dispatch(change("dark")) : dispatch(change("light"));
-    setChecked(e.currentTarget.checked);
   };
 
   return (

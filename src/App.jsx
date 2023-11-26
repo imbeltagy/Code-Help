@@ -7,11 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "./features/user/userSlice";
 
 function App() {
-  const mode = useSelector((state) => {
-    state.theme.mode;
-  });
   const dispatch = useDispatch();
-
   // Check If User Data Is Saved
   useEffect(() => {
     const id = localStorage.getItem("userId");
@@ -21,6 +17,9 @@ function App() {
       dispatch(login({ id, username: "John354", displayName: "John Doe", userState: "online" }));
     }
   }, []);
+
+  // Get Theme
+  const mode = useSelector((state) => state.theme.mode);
 
   const theme = useMemo(
     () =>
