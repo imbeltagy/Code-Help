@@ -4,10 +4,13 @@ import Sidebar from "./layout/sidebar/Index";
 import Header from "./layout/header/Index";
 import HomePage from "./pages/homePage/Index";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
+import QuestionModal from "./common/question/QuestionModal";
+import SingleQuestionPage from "./pages/singleQuestionPage/Index";
 
 const routes = {
   withSidebar: [
     { path: "/", element: <HomePage /> },
+    { path: "question/:questionID", element: <SingleQuestionPage /> },
     { path: "friends-asks", element: "Friends Asks" },
     { path: "settings", element: "Settings" },
     { path: "profile", element: "Profile" },
@@ -50,6 +53,7 @@ const AppRoutes = () => {
           <Route path={path} element={<main>{element}</main>} key={path} />
         ))}
       </Routes>
+      <QuestionModal />
     </BrowserRouter>
   );
 };
