@@ -13,11 +13,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import { login } from "/src/features/user/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // Temp API Data
 const users = [
@@ -34,6 +34,7 @@ const Login = () => {
   const [rememberMeState, setRememberMeState] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isLogged = useSelector((state) => state.user.isLogged);
 
   const togglePasswordVisibility = useCallback(() => {
     setShowPassword((prev) => !prev);
@@ -63,6 +64,15 @@ const Login = () => {
       setIsSubmitDisabled(false);
     }, 600);
   }, []);
+
+  // Redirect to Home page when logged in
+  useEffect(() => {
+    isLogged && navigate("/");
+  }, [isLogged]);
+
+  if (isLogged) {
+    return <>Redirecting To Home...</>;
+  }
 
   return (
     <>
