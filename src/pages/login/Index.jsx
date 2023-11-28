@@ -39,9 +39,12 @@ const Login = () => {
     setShowPassword((prev) => !prev);
   }, []);
 
-  const toggleRememberMeState = useCallback((e) => {
-    setRememberMeState(e.target.checked);
-  }, []);
+  const toggleRememberMeState = useCallback(
+    (e) => {
+      setRememberMeState(e.target.checked);
+    },
+    [rememberMeState]
+  );
 
   const { register, handleSubmit } = useForm();
 
@@ -117,13 +120,14 @@ const Login = () => {
               {/* Remember Me & Forgot Password */}
               <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <FormControlLabel
-                  control={<Checkbox defaultChecked={rememberMeState} />}
+                  control={<Checkbox />}
+                  defaultChecked={rememberMeState}
+                  onChange={toggleRememberMeState}
                   label={
                     <Typography variant="h6" fontSize="1rem" color="primary">
                       Remember Me
                     </Typography>
                   }
-                  onChange={toggleRememberMeState}
                 />
                 <Link component={NavLink} to="/reset-password" fontSize=".9rem">
                   Forgot your password
