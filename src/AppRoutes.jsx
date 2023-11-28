@@ -6,6 +6,7 @@ import HomePage from "./pages/homePage/Index";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import QuestionModal from "./common/question/QuestionModal";
 import SingleQuestionPage from "./pages/singleQuestionPage/Index";
+import Login from "./pages/login/Index";
 
 const routes = {
   withSidebar: [
@@ -18,7 +19,7 @@ const routes = {
     { path: "notifications", element: "Notifications" },
   ],
   withoutSidebar: [
-    { path: "/login", element: "login" },
+    { path: "/login", element: <Login /> },
     { path: "/signin", element: "signin" },
     { path: "/*", element: "error" },
   ],

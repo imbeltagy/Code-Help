@@ -10,10 +10,10 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action) => {
-      const { id, username, displayName, userState } = action.payload;
+      const { id, username, displayName, userState, rememberMe } = action.payload;
       state.isLogged = true;
       state.userMainInfo = { id, username, displayName, userState };
-      localStorage.setItem("userId", id);
+      if (rememberMe) localStorage.setItem("userId", id);
     },
     logout: (state) => {
       state.isLogged = false;
