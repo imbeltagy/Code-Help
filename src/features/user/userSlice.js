@@ -1,34 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const savedData = JSON.parse(localStorage.getItem("user")) || JSON.parse(sessionStorage.getItem("user"));
+const savedUsername = localStorage.getItem("user") || sessionStorage.getItem("user");
 
-const initialState = Boolean(savedData)
+const initialState = Boolean(savedUsername)
   ? {
       isLogged: true,
-      userMainInfo: {
-        id: savedData.id,
-        username: savedData.username,
-        displayName: savedData.displayName,
-        userState: savedData.userState,
-      },
+      username: savedUsername,
     }
   : {
       isLogged: false,
-      userMainInfo: null,
+      username: null,
     };
 
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    login: (state, action) => {
-      const { id, username, displayName, userState, rememberMe } = action.payload;
+    login: (state, { payload: { username, remember } }) => {
       state.isLogged = true;
-      state.userMainInfo = { id, username, displayName, userState };
+      state.username = username;
 
       // Save Data On The Browser
-      const userData = JSON.stringify({ id, username, displayName, userState });
-      rememberMe ? localStorage.setItem("user", userData) : sessionStorage.setItem("user", userData);
+      remember ? localStorage.setItem("user", username) : sessionStorage.setItem("user", username);
     },
     logout: (state) => {
       state.isLogged = false;

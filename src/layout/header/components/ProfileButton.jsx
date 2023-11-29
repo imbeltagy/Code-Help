@@ -47,13 +47,15 @@ const ProfileButton = () => {
   const dispatch = useDispatch();
 
   // Get User Data
-  const [userImg, setUserImg] = useState("");
-  const { displayName, userState } = useSelector((state) => state.user.userMainInfo);
-  const StatfulProfilePic = () => <ProfilePic userImg={userImg} displayName={displayName} userState={userState} />;
+  const username = useSelector((state) => state.user.username);
+  const [userData, setUserData] = useState({ displayName: "User Name", avatar: "", state: "online" });
+  const StatfulProfilePic = () => (
+    <ProfilePic userImg={userData.avatar} displayName={userData.displayName} userState={userData.state} />
+  );
 
   useEffect(() => {
     // Get Minimized Image From API
-    setUserImg("");
+    setUserData({ displayName: "User Name", avatar: "", state: "online" });
   }, []);
 
   // Menu Functions
@@ -116,12 +118,12 @@ const ProfileButton = () => {
           <ListItemText
             primary={
               <Typography variant="subtitle2" fontWeight="600" letterSpacing=".3px">
-                {displayName}
+                {userData.displayName}
               </Typography>
             }
             secondary={
               <Typography variant="caption" letterSpacing=".5px">
-                {userState}
+                {userData.userState}
               </Typography>
             }
           />

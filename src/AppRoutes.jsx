@@ -7,6 +7,7 @@ import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import QuestionModal from "./common/question/QuestionModal";
 import SingleQuestionPage from "./pages/singleQuestionPage/Index";
 import Login from "./pages/login/Index";
+import Singup from "./pages/signup/Index";
 
 const routes = {
   withSidebar: [
@@ -20,7 +21,7 @@ const routes = {
   ],
   withoutSidebar: [
     { path: "/login", element: <Login /> },
-    { path: "/signin", element: "signin" },
+    { path: "/signup", element: <Singup /> },
     { path: "/*", element: "error" },
   ],
 };

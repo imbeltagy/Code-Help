@@ -21,10 +21,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 // Temp API Data
 const users = [
-  { displayName: "Khalid Amir", username: "khalid", password: "khalid", state: "online" },
-  { displayName: "Mohammed Beltagy", username: "beltagy", password: "beltagy", state: "online" },
-  { displayName: "Ali657", username: "ali", password: "ali", state: "online" },
-  { displayName: "Unknown Yasser", username: "yasser", password: "yasser", state: "online" },
+  { username: "khalid", password: "khalid" },
+  { username: "beltagy", password: "beltagy" },
+  { username: "ali", password: "ali" },
+  { username: "yasser", password: "yasser" },
 ];
 
 const Login = () => {
@@ -55,8 +55,8 @@ const Login = () => {
     setTimeout(() => {
       if (users.some((user) => user.username === data.username && user.password === data.password)) {
         setError("");
-        const { displayName, username, state: userState } = users.filter((user) => user.username === data.username)[0];
-        dispatch(login({ displayName, username, userState, rememberMe: rememberMeState }));
+        const { username } = users.filter((user) => user.username === data.username)[0];
+        dispatch(login({ username, remember: rememberMeState }));
         navigate("/");
       } else {
         setError("Username or password is wrong");
@@ -157,7 +157,7 @@ const Login = () => {
               {/* Sign In */}
               <Typography color="text.secondary" textAlign="center">
                 Not a member yet?{" "}
-                <Link component={NavLink} to="/signin" fontSize=".9rem">
+                <Link component={NavLink} to="/signup" fontSize=".9rem">
                   Create your account
                 </Link>
               </Typography>
