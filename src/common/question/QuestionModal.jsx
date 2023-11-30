@@ -1,14 +1,14 @@
 import { Box, Modal } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import Question from "./Question";
-import { close } from "/src/features/questionModal/questionModalSlice";
+import { closeModal } from "/src/features/questions/questionsSlice";
 
 const QuestionModal = () => {
-  const id = useSelector((state) => state.questionModal.questionId);
+  const id = useSelector((state) => state.questions.modalId);
   const dispatch = useDispatch();
 
   return (
-    <Modal open={Boolean(id)} onClose={() => dispatch(close())}>
+    <Modal open={Boolean(id)} onClose={() => dispatch(closeModal())}>
       <Box
         sx={{
           width: "min(70rem, 100%)",

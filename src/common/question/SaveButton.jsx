@@ -1,7 +1,7 @@
 import { Alert, IconButton, Snackbar, Tooltip } from "@mui/material";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { toggleSavedState } from "/src/features/viewedQuestions/viewedQuestionsSlice";
+import { toggleSavedState } from "/src/features/questions/questionsSlice";
 import { Bookmark } from "@mui/icons-material";
 
 const SaveButton = ({ id, isSaved }) => {

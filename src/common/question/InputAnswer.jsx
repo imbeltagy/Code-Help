@@ -2,7 +2,7 @@ import { useTheme } from "@emotion/react";
 import { Send } from "@mui/icons-material";
 import { FormControl, IconButton, Stack } from "@mui/material";
 import React, { forwardRef, useCallback, useEffect, useState } from "react";
-import { pushAnswers } from "/src/features/viewedQuestions/viewedQuestionsSlice";
+import { pushAnswers } from "/src/features/questions/questionsSlice";
 import { useDispatch } from "react-redux";
 
 const InputAnswer = forwardRef(({ id }, ref) => {

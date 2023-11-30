@@ -1,27 +1,42 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  modalId: null,
+  editorId: null,
   viewedQuestions: {},
-  keys: [],
+  viewedQuestionsKeys: [],
 };
 
-export const viewedQuestionsSlice = createSlice({
-  name: "viewedQuestions",
+export const questionsSlice = createSlice({
+  name: "questions",
   initialState,
   reducers: {
+    openModal: (state, action) => {
+      state.modalId = action.payload;
+    },
+    closeModal: (state) => {
+      state.modalId = null;
+    },
+    openEditor: (state, action) => {
+      state.editorId = action.payload;
+    },
+    closeEditor: (state) => {
+      state.editorId = null;
+    },
+    // Actions For Viewed Questions
     pushQuestion: (state, action) => {
       // Takes QuestionID and QuestionData without Answers
-      if (state.keys.includes(action.payload.id)) {
+      if (state.viewedQuestionsKeys.includes(action.payload.id)) {
         state.viewedQuestions[action.payload.id] = {
           ...state.viewedQuestions[action.payload.id],
           ...action.payload.data,
         };
       } else {
-        state.viewedQuestions = {
+        state.viewedQuestions[action.payload.id] = {
           ...state.viewedQuestions,
           [action.payload.id]: { ...action.payload.data, answers: {} },
         };
-        state.keys.push(action.payload.id);
+        state.viewedQuestionsKeys.push(action.payload.id);
       }
     },
     pushAnswers: (state, action) => {
@@ -36,13 +51,22 @@ export const viewedQuestionsSlice = createSlice({
       // Takes QuestionID
       state.viewedQuestions[action.payload.id].isSaved = !state.viewedQuestions[action.payload.id].isSaved;
     },
-    clear: (state) => {
+    clearViewQuestions: (state) => {
       state.viewedQuestions = {};
-      state.keys = [];
+      state.viewedQuestionsKeys = [];
     },
   },
 });
 
-export const { pushQuestion, pushAnswers, toggleSavedState, clear } = viewedQuestionsSlice.actions;
+export const {
+  openModal,
+  closeModal,
+  openEditor,
+  closeEditor,
+  pushQuestion,
+  pushAnswers,
+  toggleSavedState,
+  clearViewQuestions,
+} = questionsSlice.actions;
 
-export default viewedQuestionsSlice.reducer;
+export default questionsSlice.reducer;

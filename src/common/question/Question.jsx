@@ -12,21 +12,22 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Chat, Close } from "@mui/icons-material";
+import { Chat, Close, MoreVert } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { open, close } from "/src/features/questionModal/questionModalSlice";
-import { pushQuestion } from "/src/features/viewedQuestions/viewedQuestionsSlice";
+import { openModal, closeModal, pushQuestion } from "/src/features/questions/questionsSlice";
 import AnswersSection from "./AnswersSection";
 import { Link } from "react-router-dom";
 import InputAnswer from "./InputAnswer";
 import CopyLink from "./CopyLink";
 import SaveButton from "./SaveButton";
+import AuthorOptions from "./AuthorOptions";
 
 // Temp API Data
 const posts = {
   123: {
     avatar: "",
-    username: "Vegetarian Stir-Fry with Tofu",
+    username: "user1",
+    displayName: "Vegetarian Stir-Fry with Tofu",
     date: "May 8, 2018",
     title: "My Question",
     content:
@@ -36,7 +37,8 @@ const posts = {
   },
   749: {
     avatar: "",
-    username: "Shrimp and Chorizo Paella",
+    username: "beltagy",
+    displayName: "Shrimp and Chorizo Paella",
     date: "September 14, 2016",
     title: "Problem with this code.",
     content:
@@ -46,7 +48,8 @@ const posts = {
   },
   196: {
     avatar: "",
-    username: "Grilled Salmon with Lemon-Herb Marinade",
+    username: "yseer",
+    displayName: "Grilled Salmon with Lemon-Herb Marinade",
     date: "February 22, 2017",
     title: "My device gonna die.",
     content:
@@ -58,7 +61,8 @@ const posts = {
 
 const Question = ({ id, modal, displayAnswers }) => {
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.viewedQuestions.viewedQuestions[id]);
+  const data = useSelector((state) => state.questions.viewedQuestions[id]);
+  const currentUsername = useSelector((state) => state.user.username);
   const answersSectionRef = useRef();
 
   //Request Data From API
@@ -75,21 +79,30 @@ const Question = ({ id, modal, displayAnswers }) => {
         title={
           <Link
             to={`/users/${data?.username}`}
-            onClick={() => dispatch(close())}
+            onClick={() => dispatch(closeModal())}
             style={{ color: "inherit", textDecoration: "none" }}
           >
-            {data?.username}
+            {data?.displayName}
           </Link>
         }
         titleTypographyProps={{ fontWeight: "500" }}
         subheader={data?.date}
-        {...(modal && {
-          action: (
-            <IconButton onClick={() => dispatch(close())}>
-              <Close />
-            </IconButton>
-          ),
-        })}
+        {...(modal || currentUsername === data?.username
+          ? {
+              action: (
+                <>
+                  {currentUsername === data?.username ? (
+                    <AuthorOptions questionId={id} isSolved={data?.isSolved} />
+                  ) : null}
+                  {modal ? (
+                    <IconButton aria-label="close question" onClick={() => dispatch(closeModal())}>
+                      <Close />
+                    </IconButton>
+                  ) : null}
+                </>
+              ),
+            }
+          : null)}
       />
 
       <Divider />
@@ -108,7 +121,7 @@ const Question = ({ id, modal, displayAnswers }) => {
             size="small"
           />
           <Typography variant="body2" mt={2} color="text.secondary">
-            {data?.content.split("\n").map((line, i) => (
+            {data?.content?.split("\n").map((line, i) => (
               <Fragment key={i}>
                 {i > 0 && <br />}
                 {line}
@@ -127,7 +140,7 @@ const Question = ({ id, modal, displayAnswers }) => {
           <Tooltip describeChild title="Write An Answer">
             <IconButton
               onClick={() => {
-                !displayAnswers && dispatch(open(id));
+                !displayAnswers && dispatch(openModal(id));
                 answersSectionRef.current?.focus();
               }}
             >

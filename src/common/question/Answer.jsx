@@ -2,7 +2,7 @@ import { useTheme } from "@emotion/react";
 import { Avatar, Box, Stack, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { close } from "/src/features/questionModal/questionModalSlice";
+import { closeModal } from "/src/features/questions/questionsSlice";
 import { Fragment } from "react";
 
 const Answer = ({ username, content }) => {
@@ -21,7 +21,7 @@ const Answer = ({ username, content }) => {
       >
         <Link
           to={`/users/${username}`}
-          onClick={() => dispatch(close())}
+          onClick={() => dispatch(closeModal())}
           style={{ color: "inherit", textDecoration: "none" }}
         >
           <Typography pb={1} variant="subtitle2" component="span">

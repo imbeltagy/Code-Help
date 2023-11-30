@@ -2,7 +2,7 @@ import { CardContent, Stack } from "@mui/material";
 import Answer from "./Answer";
 import { forwardRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { pushAnswers } from "/src/features/viewedQuestions/viewedQuestionsSlice";
+import { pushAnswers } from "/src/features/questions/questionsSlice";
 
 // Temp API Data
 const postsAnswers = {
@@ -25,7 +25,7 @@ const postsAnswers = {
 
 const AnswersSection = ({ id }) => {
   const dispatch = useDispatch();
-  const answers = useSelector((state) => state.viewedQuestions.viewedQuestions[id]?.answers) || {};
+  const answers = useSelector((state) => state.questions.viewedQuestions[id]?.answers) || {};
 
   // Request Data From API
   useEffect(() => {
