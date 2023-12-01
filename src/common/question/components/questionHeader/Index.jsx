@@ -1,8 +1,8 @@
 import { Avatar, CardHeader, Divider } from "@mui/material";
 import { Link } from "react-router-dom";
-import AuthorActions from "../authorActions/Index";
 import { useSelector } from "react-redux";
-import { Fragment } from "react";
+import { Fragment, Suspense, lazy } from "react";
+const AuthorActions = lazy(() => import("/src/common/question/components/authorActions/Index"));
 
 const QuestionHeader = ({ id, moreActions = [] }) => {
   const { avatar, username, displayName, date } = useSelector((state) => state.questions.savedQuestions[id]);
@@ -24,7 +24,11 @@ const QuestionHeader = ({ id, moreActions = [] }) => {
         subheader={date}
         action={
           <>
-            {currentUser === username ? <AuthorActions id={id} /> : null}
+            {currentUser === username ? (
+              <Suspense>
+                <AuthorActions id={id} />
+              </Suspense>
+            ) : null}
             {moreActions.map((action, i) => (
               <Fragment key={i}>{action}</Fragment>
             ))}
