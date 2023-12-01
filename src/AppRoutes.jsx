@@ -4,7 +4,6 @@ import Sidebar from "./layout/sidebar/Index";
 import Header from "./layout/header/Index";
 import HomePage from "./pages/homePage/Index";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
-import QuestionModal from "./common/question/QuestionModal";
 import SingleQuestionPage from "./pages/singleQuestionPage/Index";
 import Login from "./pages/login/Index";
 import Singup from "./pages/signup/Index";
@@ -55,7 +54,6 @@ const AppRoutes = () => {
           <Route path={path} element={<main>{element}</main>} key={path} />
         ))}
       </Routes>
-      <QuestionModal />
     </BrowserRouter>
   );
 };

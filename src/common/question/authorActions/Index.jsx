@@ -1,37 +1,12 @@
-import styled from "@emotion/styled";
-import {
-  Check,
-  CheckCircle,
-  Delete,
-  Edit,
-  ExitToAppOutlined,
-  GroupOutlined,
-  MoreVert,
-  PersonOutlineOutlined,
-} from "@mui/icons-material";
-import {
-  Avatar,
-  Badge,
-  Box,
-  Divider,
-  IconButton,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-  Typography,
-} from "@mui/material";
-import { Fragment, useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "/src/features/user/userSlice";
-import { useNavigate } from "react-router-dom";
+import { CheckCircle, Delete, Edit, MoreVert } from "@mui/icons-material";
+import { Box, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
+import { Fragment, useCallback, useState } from "react";
 import QuestionEditor from "./Editor";
+import { useSelector } from "react-redux";
 
-const AuthorOptions = ({ questionId, isSolved }) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+const AuthorActions = ({ id }) => {
   const [openEditor, setOpenEditor] = useState(false);
+  const isSolved = useSelector((state) => state.questions.savedQuestions[id].isSolved);
 
   // Menu Items
   const handleEdit = () => {
@@ -62,14 +37,14 @@ const AuthorOptions = ({ questionId, isSolved }) => {
   }, []);
 
   const open = Boolean(anchorEl);
-  const id = open ? "question-setting-menu" : undefined;
+  const MenuID = open ? "question-setting-menu" : undefined;
 
   return (
     <>
       <IconButton
         id="question-settings-button"
         aria-label="open question settings"
-        aria-controls={id}
+        aria-controls={MenuID}
         aria-haspopup="true"
         aria-expanded={open ? "true" : "undefined"}
         onClick={handleClick}
@@ -79,7 +54,7 @@ const AuthorOptions = ({ questionId, isSolved }) => {
 
       {/* Menu */}
       <Menu
-        id={id}
+        id={MenuID}
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
@@ -116,9 +91,9 @@ const AuthorOptions = ({ questionId, isSolved }) => {
       </Menu>
 
       {/* Editor */}
-      <QuestionEditor questionId={questionId} open={openEditor} setOpen={setOpenEditor} />
+      <QuestionEditor id={id} open={openEditor} setOpen={setOpenEditor} />
     </>
   );
 };
 
-export default AuthorOptions;
+export default AuthorActions;

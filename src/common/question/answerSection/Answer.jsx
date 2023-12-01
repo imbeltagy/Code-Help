@@ -2,7 +2,7 @@ import { useTheme } from "@emotion/react";
 import { Avatar, Box, Stack, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { closeModal } from "/src/features/questions/questionsSlice";
+// import { closeModal } from "/src/features/questions/questionsSlice";
 import { Fragment } from "react";
 
 const Answer = ({ username, content }) => {

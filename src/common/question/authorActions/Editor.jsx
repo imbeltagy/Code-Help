@@ -16,10 +16,10 @@ import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { pushQuestion } from "/src/features/questions/questionsSlice";
 
-const QuestionEditor = ({ questionId, open, setOpen }) => {
+const QuestionEditor = ({ id, open, setOpen }) => {
   const titleInputRef = useRef();
   const textareaRef = useRef();
-  const { title, content } = useSelector((state) => state.questions.viewedQuestions[questionId]);
+  const { title, content } = useSelector((state) => state.questions.savedQuestions[id]);
   const dispatch = useDispatch();
   const [alertType, setAlertType] = useState("success");
   const [openAlert, setOpenAlert] = useState(false);
@@ -30,13 +30,13 @@ const QuestionEditor = ({ questionId, open, setOpen }) => {
       content: textareaRef.current.value,
     };
     const data = {
-      questionId,
+      questionId: id,
       ...newData,
     };
     // Send data to server
     // If Response = true
     // Save Question State
-    dispatch(pushQuestion({ id: questionId, data: newData }));
+    dispatch(pushQuestion({ id, data: newData }));
     setAlertType("success");
     setOpen(false);
 

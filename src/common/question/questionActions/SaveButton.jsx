@@ -1,16 +1,17 @@
 import { Alert, IconButton, Snackbar, Tooltip } from "@mui/material";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { toggleSavedState } from "/src/features/questions/questionsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { changeSavedState } from "/src/features/questions/questionsSlice";
 import { Bookmark } from "@mui/icons-material";
 
-const SaveButton = ({ id, isSaved }) => {
+const SaveButton = ({ id }) => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [sucessState, setSucessState] = useState();
+  const isSaved = useSelector((state) => state.questions.savedQuestions[id].isSaved);
 
   const handleClick = () => {
-    dispatch(toggleSavedState({ id }));
+    dispatch(changeSavedState({ id, state: !isSaved }));
 
     // Send Data To API
     setTimeout(() => {

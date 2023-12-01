@@ -1,16 +1,17 @@
 import { useTheme } from "@emotion/react";
 import { Send } from "@mui/icons-material";
-import { FormControl, IconButton, Stack } from "@mui/material";
-import React, { forwardRef, useCallback, useEffect, useState } from "react";
+import { IconButton, InputBase, Stack } from "@mui/material";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { pushAnswers } from "/src/features/questions/questionsSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-const InputAnswer = forwardRef(({ id }, ref) => {
+const InputAnswer = ({ id }) => {
   const dispatch = useDispatch();
   const mode = useTheme().palette.mode;
   const [inputVal, setInputVal] = useState("");
   const [isShiftPressed, setIsShiftPressed] = useState(false);
-  let formControlRows = inputVal.split("\n").length;
+  const ref = useRef();
+  const currentUser = useSelector((state) => state.user.username);
 
   // Focus On Input on Mount
   useEffect(() => {
@@ -19,7 +20,7 @@ const InputAnswer = forwardRef(({ id }, ref) => {
 
   const publishAnswer = useCallback(() => {
     const tempID = Math.random();
-    dispatch(pushAnswers({ id, data: { [tempID]: { username: "me", content: ref.current.value } } }));
+    dispatch(pushAnswers({ id, data: { [tempID]: { username: currentUser, content: ref.current.value } } }));
     ref.current.value = "";
     // Send Answer To API
   }, []);
@@ -33,10 +34,10 @@ const InputAnswer = forwardRef(({ id }, ref) => {
       direction="row"
       mt={1}
     >
-      <FormControl
-        rows={formControlRows <= 3 ? formControlRows : 3}
-        component="textarea"
-        ref={ref}
+      <InputBase
+        inputRef={ref}
+        multiline
+        maxRows={3}
         onChange={(e) => setInputVal(e.target.value)}
         onKeyDown={(e) => {
           e.key === "Shift" && setIsShiftPressed(true);
@@ -62,6 +63,6 @@ const InputAnswer = forwardRef(({ id }, ref) => {
       </IconButton>
     </Stack>
   );
-});
+};
 
 export default InputAnswer;

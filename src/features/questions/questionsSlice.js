@@ -1,72 +1,50 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  modalId: null,
-  editorId: null,
-  viewedQuestions: {},
-  viewedQuestionsKeys: [],
+  savedQuestions: {},
+  savedAnswers: {},
+  keys: [],
 };
 
 export const questionsSlice = createSlice({
   name: "questions",
   initialState,
   reducers: {
-    openModal: (state, action) => {
-      state.modalId = action.payload;
-    },
-    closeModal: (state) => {
-      state.modalId = null;
-    },
-    openEditor: (state, action) => {
-      state.editorId = action.payload;
-    },
-    closeEditor: (state) => {
-      state.editorId = null;
-    },
-    // Actions For Viewed Questions
     pushQuestion: (state, action) => {
-      // Takes QuestionID and QuestionData without Answers
-      if (state.viewedQuestionsKeys.includes(action.payload.id)) {
-        state.viewedQuestions[action.payload.id] = {
-          ...state.viewedQuestions[action.payload.id],
+      // Takes QuestionID and QuestionData
+      if (state.keys.includes(action.payload.id)) {
+        // If Question Exist
+        state.savedQuestions[action.payload.id] = {
+          ...state.savedQuestions[action.payload.id],
           ...action.payload.data,
         };
       } else {
-        state.viewedQuestions[action.payload.id] = {
-          ...state.viewedQuestions,
-          [action.payload.id]: { ...action.payload.data, answers: {} },
+        state.savedQuestions[action.payload.id] = {
+          ...action.payload.data,
         };
-        state.viewedQuestionsKeys.push(action.payload.id);
+        state.savedAnswers[action.payload.id] = {};
+        state.keys.push(action.payload.id);
       }
     },
     pushAnswers: (state, action) => {
       // Takes QuestionID and Object of Answers
       // Merge Answers Without Duplicating
-      state.viewedQuestions[action.payload.id].answers = {
-        ...state.viewedQuestions[action.payload.id].answers,
+      state.savedAnswers[action.payload.id] = {
+        ...state.savedAnswers[action.payload.id],
         ...action.payload.data,
       };
     },
-    toggleSavedState: (state, action) => {
-      // Takes QuestionID
-      state.viewedQuestions[action.payload.id].isSaved = !state.viewedQuestions[action.payload.id].isSaved;
+    changeSavedState: (state, action) => {
+      // Takes QuestionID and state(boolean)
+      state.savedQuestions[action.payload.id].isSaved = action.payload.state;
     },
-    clearViewQuestions: (state) => {
-      state.viewedQuestions = {};
-      state.viewedQuestionsKeys = [];
+    changeSolvedState: (state, action) => {
+      // Takes QuestionID and state(boolean)
+      state.savedQuestions[action.payload.id].isSolved = action.payload.state;
     },
   },
 });
 
-export const {
-  openModal,
-  closeModal,
-  openEditor,
-  closeEditor,
-  pushQuestion,
-  pushAnswers,
-  toggleSavedState,
-  clearViewQuestions,
-} = questionsSlice.actions;
+export const { pushQuestion, pushAnswers, changeSavedState, changeSolvedState } = questionsSlice.actions;
 
 export default questionsSlice.reducer;
