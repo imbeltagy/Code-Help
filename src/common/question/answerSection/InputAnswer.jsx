@@ -1,9 +1,10 @@
 import { useTheme } from "@emotion/react";
 import { Send } from "@mui/icons-material";
-import { IconButton, InputBase, Stack } from "@mui/material";
+import { Box, IconButton, InputBase, Link, Stack } from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { pushAnswers } from "/src/features/questions/questionsSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { Link as RouterLink } from "react-router-dom";
 
 const InputAnswer = ({ id }) => {
   const dispatch = useDispatch();
@@ -11,12 +12,12 @@ const InputAnswer = ({ id }) => {
   const [inputVal, setInputVal] = useState("");
   const [isShiftPressed, setIsShiftPressed] = useState(false);
   const ref = useRef();
-  const currentUser = useSelector((state) => state.user.username);
+  const { username: currentUser, isLogged } = useSelector((state) => state.user);
 
   // Focus On Input on Mount
   useEffect(() => {
-    ref.current.focus();
-  }, []);
+    isLogged && ref.current.focus();
+  }, [isLogged]);
 
   const publishAnswer = useCallback(() => {
     const tempID = Math.random();
@@ -34,33 +35,45 @@ const InputAnswer = ({ id }) => {
       direction="row"
       mt={1}
     >
-      <InputBase
-        inputRef={ref}
-        multiline
-        maxRows={3}
-        onChange={(e) => setInputVal(e.target.value)}
-        onKeyDown={(e) => {
-          e.key === "Shift" && setIsShiftPressed(true);
-          if (e.key === "Enter" && inputVal && !isShiftPressed) {
-            publishAnswer();
-            e.preventDefault();
-          }
-        }}
-        onKeyUp={(e) => {
-          e.key === "Shift" && setIsShiftPressed(false);
-        }}
-        sx={{ flexGrow: 1, backgroundColor: "transparent", outline: "none", resize: "none" }}
-        placeholder="Write an answer..."
-      />
-      <IconButton
-        disabled={!inputVal}
-        onClick={() => {
-          publishAnswer();
-          ref.current.focus();
-        }}
-      >
-        <Send />
-      </IconButton>
+      {isLogged ? (
+        <>
+          <InputBase
+            inputRef={ref}
+            multiline
+            maxRows={3}
+            onChange={(e) => setInputVal(e.target.value)}
+            onKeyDown={(e) => {
+              e.key === "Shift" && setIsShiftPressed(true);
+              if (e.key === "Enter" && inputVal && !isShiftPressed) {
+                publishAnswer();
+                e.preventDefault();
+              }
+            }}
+            onKeyUp={(e) => {
+              e.key === "Shift" && setIsShiftPressed(false);
+            }}
+            sx={{ flexGrow: 1, backgroundColor: "transparent", outline: "none", resize: "none" }}
+            placeholder="Write an answer..."
+          />
+          <IconButton
+            disabled={!inputVal}
+            onClick={() => {
+              publishAnswer();
+              ref.current.focus();
+            }}
+          >
+            <Send />
+          </IconButton>
+        </>
+      ) : (
+        <Box p={1}>
+          You need to{" "}
+          <Link fontWeight="600" underline="none" component={RouterLink} to="/signup">
+            sign up
+          </Link>{" "}
+          to answer.
+        </Box>
+      )}
     </Stack>
   );
 };
