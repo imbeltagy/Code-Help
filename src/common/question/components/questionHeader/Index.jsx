@@ -2,8 +2,9 @@ import { Avatar, CardHeader, Divider } from "@mui/material";
 import { Link } from "react-router-dom";
 import AuthorActions from "../authorActions/Index";
 import { useSelector } from "react-redux";
+import { Fragment } from "react";
 
-const QuestionHeader = ({ id, moreActions }) => {
+const QuestionHeader = ({ id, moreActions = [] }) => {
   const { avatar, username, displayName, date } = useSelector((state) => state.questions.savedQuestions[id]);
   const currentUser = useSelector((state) => state.user.username);
   return (
@@ -24,7 +25,9 @@ const QuestionHeader = ({ id, moreActions }) => {
         action={
           <>
             {currentUser === username ? <AuthorActions id={id} /> : null}
-            {moreActions ? moreActions : null}
+            {moreActions.map((action, i) => (
+              <Fragment key={i}>{action}</Fragment>
+            ))}
           </>
         }
       />
@@ -33,20 +36,5 @@ const QuestionHeader = ({ id, moreActions }) => {
     </>
   );
 };
-
-// {...(modal || currentUser === username
-//   ? {
-//       action: (
-//         <>
-//           {currentUser === username ? <AuthorActions questionId={id} isSolved={isSolved} /> : null}
-//           {modal ? (
-//             <IconButton aria-label="close question" onClick={() => setOpen(false)}>
-//               <Close />
-//             </IconButton>
-//           ) : null}
-//         </>
-//       ),
-//     }
-//   : null)}
 
 export default QuestionHeader;

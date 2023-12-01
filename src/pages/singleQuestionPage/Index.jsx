@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Card, Divider } from "@mui/material";
-import QuestionHeader from "/src/common/question/questionHeader/Index";
-import QuestionBody from "/src/common/question/questionBody/Index";
-import QuestionActions from "/src/common/question/questionActions/Index";
-import AnswersSection from "/src/common/question/answerSection/Index";
-import InputAnswer from "/src/common/question/answerSection/InputAnswer";
+import { Box } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { pushQuestion } from "/src/features/questions/questionsSlice";
+const FullQuestion = lazy(() => import("/src/common/question/FullQuestion"));
 
 // Temp API Data
 const questions = {
@@ -66,21 +62,11 @@ const SingleQuestionPage = () => {
 
   if (questionExist)
     return (
-      <Box pb={4}>
-        <Card>
-          <QuestionHeader id={questionID} />
-
-          <QuestionBody id={questionID} />
-
-          <QuestionActions id={questionID} disableModal />
-
-          <Divider />
-
-          <AnswersSection id={questionID} />
-
-          <InputAnswer id={questionID} />
-        </Card>
-      </Box>
+      <Suspense>
+        <Box pb={4}>
+          <FullQuestion id={questionID} />
+        </Box>
+      </Suspense>
     );
 
   return "This question doesn't exist";

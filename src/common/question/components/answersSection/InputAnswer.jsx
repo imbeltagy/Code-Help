@@ -1,7 +1,7 @@
 import { useTheme } from "@emotion/react";
 import { Send } from "@mui/icons-material";
 import { Box, IconButton, InputBase, Link, Stack } from "@mui/material";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { pushAnswers } from "/src/features/questions/questionsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";

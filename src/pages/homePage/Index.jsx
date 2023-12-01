@@ -3,9 +3,7 @@ import QuestionCreator from "/src/common/questionCreator/Index";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { pushQuestion } from "/src/features/questions/questionsSlice";
-import QuestionBody from "/src/common/question/questionBody/Index";
-import QuestionActions from "/src/common/question/questionActions/Index";
-import QuestionHeader from "/src/common/question/questionHeader/Index";
+import NoAnswersQuestion from "/src/common/question/NoAnswersQuestion";
 
 // Temp API Data
 const questions = {
@@ -67,13 +65,7 @@ const HomePage = () => {
       {/* Questions */}
       <Stack pb={4} spacing={4}>
         {questionsIDs.map((id) => (
-          <Card key={id}>
-            <QuestionHeader id={id} />
-
-            <QuestionBody id={id} />
-
-            <QuestionActions id={id} />
-          </Card>
+          <NoAnswersQuestion id={id} key={id} />
         ))}
       </Stack>
     </>

@@ -1,8 +1,8 @@
 import { CardActions } from "@mui/material";
-import React from "react";
+import { Suspense, lazy } from "react";
 import SaveButton from "./SaveButton";
 import CopyLink from "./CopyLink";
-import AnswersButton from "./AnswersButton";
+const AnswersButton = lazy(() => import("./AnswersButton"));
 
 const QuestionActions = ({ id, disableModal }) => {
   return (
@@ -11,7 +11,12 @@ const QuestionActions = ({ id, disableModal }) => {
 
       <CopyLink id={id} />
 
-      {!disableModal ? <AnswersButton id={id} /> : null}
+      {!disableModal ? (
+        <Suspense>
+          {/* Suspense to not render the element if not needed */}
+          <AnswersButton id={id} />
+        </Suspense>
+      ) : null}
     </CardActions>
   );
 };
