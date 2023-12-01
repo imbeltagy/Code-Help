@@ -1,5 +1,5 @@
 import { Box, Card, Divider, IconButton, Modal, Tooltip } from "@mui/material";
-import { Chat } from "@mui/icons-material";
+import { Chat, Close } from "@mui/icons-material";
 import { useRef, useState } from "react";
 import QuestionHeader from "/src/common/question/questionHeader/Index";
 import QuestionBody from "/src/common/question/questionBody/Index";
@@ -7,9 +7,15 @@ import QuestionActions from "./Index";
 import AnswersSection from "/src/common/question/answerSection/Index";
 import InputAnswer from "/src/common/question/answerSection/InputAnswer";
 
-const AnswersButton = ({ id, disableModal }) => {
+const AnswersButton = ({ id }) => {
   const [open, setOpen] = useState(false);
   const answersSectionRef = useRef();
+
+  const CloseButton = () => (
+    <IconButton onClick={() => setOpen(false)} aria-label="Close Question">
+      <Close />
+    </IconButton>
+  );
 
   return (
     <>
@@ -37,7 +43,7 @@ const AnswersButton = ({ id, disableModal }) => {
           }}
         >
           <Card sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-            <QuestionHeader id={id} />
+            <QuestionHeader id={id} moreActions={[<CloseButton />]} />
 
             <Box flexGrow={1} overflow="auto">
               <QuestionBody id={id} />
