@@ -12,8 +12,8 @@ const questions = {
   123: {
     avatar: "",
     username: "user1",
-    displayName: "Vegetarian Stir-Fry with Tofu",
-    date: "May 8, 2018",
+    displayName: "3mmar Khalid",
+    date: "1701463130358",
     title: "My Question",
     content:
       "Whip up a quick and healthy vegetarian stir-fry featuring colorful veggies and tofu. It's a nutritious option for a busy weeknight dinner.",
@@ -23,8 +23,8 @@ const questions = {
   749: {
     avatar: "",
     username: "beltagy",
-    displayName: "Shrimp and Chorizo Paella",
-    date: "September 14, 2016",
+    displayName: "Mohammed Beltagy",
+    date: 1700403130358,
     title: "Problem with this code.",
     content:
       "This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like.",
@@ -34,8 +34,8 @@ const questions = {
   196: {
     avatar: "",
     username: "yseer",
-    displayName: "Grilled Salmon with Lemon-Herb Marinade",
-    date: "February 22, 2017",
+    displayName: "Yasser Bro",
+    date: 1701453130358,
     title: "My device gonna die.",
     content:
       "Enjoy the rich flavors of grilled salmon with a zesty lemon-herb marinade. It's a delightful dish for a cozy dinner with loved ones.",
