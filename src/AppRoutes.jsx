@@ -1,12 +1,12 @@
+import { lazy, Suspense } from "react";
 import { Box, Container, Stack } from "@mui/material";
-import React from "react";
-import Sidebar from "./layout/sidebar/Index";
-import Header from "./layout/header/Index";
-import HomePage from "./pages/homePage/Index";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
-import SingleQuestionPage from "./pages/singleQuestionPage/Index";
-import Login from "./pages/login/Index";
-import Singup from "./pages/signup/Index";
+const Sidebar = lazy(() => import("./layout/sidebar/Index"));
+const Header = lazy(() => import("./layout/header/Index"));
+const HomePage = lazy(() => import("./pages/homePage/Index"));
+const SingleQuestionPage = lazy(() => import("./pages/singleQuestionPage/Index"));
+const Login = lazy(() => import("./pages/login/Index"));
+const Singup = lazy(() => import("./pages/signup/Index"));
 
 const routes = {
   withSidebar: [
@@ -46,12 +46,21 @@ const AppRoutes = () => {
         {/* Pages With Sidebar and Header */}
         <Route path="/" element={<Layout />}>
           {routes.withSidebar.map(({ path, element }) => (
-            <Route path={path} element={element} key={path} />
+            <Route path={path} element={<Suspense fallback={<p>Loading...</p>}>{element}</Suspense>} key={path} />
           ))}
         </Route>
+
         {/* Pages Without Sidebar and Header */}
         {routes.withoutSidebar.map(({ path, element }) => (
-          <Route path={path} element={<main>{element}</main>} key={path} />
+          <Route
+            path={path}
+            element={
+              <Suspense fallback={<p>Loading...</p>}>
+                <main>{element}</main>
+              </Suspense>
+            }
+            key={path}
+          />
         ))}
       </Routes>
     </BrowserRouter>
