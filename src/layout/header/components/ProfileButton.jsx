@@ -36,12 +36,6 @@ const ProfilePic = ({ userImg, displayName, userState }) => (
   </StyledBadge>
 );
 
-// Menu
-const menuLinks = [
-  { icon: <PersonOutlineOutlined />, text: "Profile", link: "/profile" },
-  { icon: <GroupOutlined />, text: "Friends", link: "/friends" },
-];
-
 const ProfileButton = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -52,6 +46,11 @@ const ProfileButton = () => {
   const StatfulProfilePic = () => (
     <ProfilePic userImg={userData.avatar} displayName={userData.displayName} userState={userData.state} />
   );
+
+  const menuLinks = [
+    { icon: <PersonOutlineOutlined />, text: "Profile", link: `/user/${username}` },
+    { icon: <GroupOutlined />, text: "Friends", link: "/friends" },
+  ];
 
   useEffect(() => {
     // Get Minimized Image From API
