@@ -3,12 +3,12 @@ import { Alert, Box, Container, Stack, Link as MuiLink } from "@mui/material";
 import { BrowserRouter, Link, Outlet, Route, Routes } from "react-router-dom";
 import Settings from "./pages/settings/Index";
 import { useSelector } from "react-redux";
+import Login from "./pages/login/Index";
+import Signup from "./pages/signup/Index";
 const Sidebar = lazy(() => import("./layout/sidebar/Index"));
 const Header = lazy(() => import("./layout/header/Index"));
 const HomePage = lazy(() => import("./pages/homePage/Index"));
 const SingleQuestionPage = lazy(() => import("./pages/singleQuestionPage/Index"));
-const Login = lazy(() => import("./pages/login/Index"));
-const Singup = lazy(() => import("./pages/signup/Index"));
 
 const Login2AcessPage = ({ children }) => {
   const isLogged = useSelector((state) => state.user.isLogged);
@@ -94,7 +94,7 @@ const routes = {
   ],
   withoutSidebar: [
     { path: "/login", element: <Login /> },
-    { path: "/signup", element: <Singup /> },
+    { path: "/signup", element: <Signup /> },
     { path: "/*", element: "error" },
   ],
 };
