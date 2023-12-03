@@ -22,7 +22,7 @@ const Login2AcessPage = ({ children }) => {
         <MuiLink fontWeight="600" underline="none" component={Link} to="/login">
           login
         </MuiLink>{" "}
-        or{""}
+        or{" "}
         <MuiLink fontWeight="600" underline="none" component={Link} to="/signup">
           sign up
         </MuiLink>{" "}
