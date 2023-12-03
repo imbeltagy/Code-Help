@@ -16,6 +16,7 @@ import { NavLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import axios from "axios";
 
 // Fake API
 const usernames = ["beltagy", "khalid", "ali", "yasser"];
@@ -53,22 +54,44 @@ const CreateAccount = ({ handleNext, setUserInfo }) => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = useCallback((data) => {
+  const onSubmit = (data) => {
     setIsSubmitDisabled(true);
-    // Request From API
-    setTimeout(() => {
-      if (usernames.every((username) => username !== data.username)) {
-        setIsUsernameUnique(true);
-        // Send Data To API
+    const { username, password } = data;
+    axios
+      .post(
+        "http://127.0.0.1:5000/signin",
+        { username, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data);
         setUserInfo((prev) => ({ ...prev, username: data.username }));
-        // next step
-        handleNext();
-      } else {
         setIsUsernameUnique(false);
-      }
-      setIsSubmitDisabled(false);
-    }, 600);
-  }, []);
+        setIsSubmitDisabled(false);
+        handleNext();
+      })
+      .catch((error) => {
+        console.log(error.data);
+        setIsSubmitDisabled(false);
+      });
+    // try {
+    //   const response = await ;
+    // } catch (error) {
+    // }
+    // Request From API
+    // setTimeout(() => {
+    //   if (usernames.every((username) => username !== data.username)) {
+    //     setIsUsernameUnique(true);
+    //     // Send Data To API
+    //     // next step
+    //   } else {
+    //   }
+    // }, 600);
+  };
 
   return (
     <form action="/" method="POST" onSubmit={handleSubmit(onSubmit)}>
