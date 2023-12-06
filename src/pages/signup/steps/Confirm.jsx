@@ -1,24 +1,44 @@
 import { Alert, Button, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useCallback, useState } from "react";
+import { useDispatch } from "react-redux";
+import { login } from "/src/features/user/userSlice";
+import axios from "axios";
 
 const Confirm = ({ handleBack, userInfo }) => {
   const [sending, setSending] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleFinish = useCallback(() => {
+  const handleFinish = useCallback(async () => {
     setSending(true);
-    setTimeout(() => {
-      // const data = new FormData();
-      // data.append("file", userInfo.avatar);
-      // data.append("user", "hubot");
-      // fetch('/', {
-      //   method: 'POST',
-      //   body: data
-      // })
+
+    const { username, displayName, brief } = userInfo;
+    try {
+      await axios.post(
+        "http://127.0.0.1:5000/change_display_name",
+        { username, newDisplayName: displayName },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      await axios.post(
+        "http://127.0.0.1:5000/change_brief",
+        { username, newBrief: brief },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      dispatch(login({ username: data.username, remember: rememberMeState }));
       setSending(false);
       navigate("/login");
-    }, 500);
+    } catch (err) {
+      console.log(err);
+    }
   }, []);
 
   return (

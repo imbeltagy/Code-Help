@@ -18,14 +18,7 @@ import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import { login } from "/src/features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-
-// Temp API Data
-const users = [
-  { username: "khalid", password: "khalid" },
-  { username: "beltagy", password: "beltagy" },
-  { username: "ali", password: "ali" },
-  { username: "yasser", password: "yasser" },
-];
+import axios from "axios";
 
 const Login = () => {
   const [error, setError] = useState("");
@@ -49,20 +42,25 @@ const Login = () => {
 
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = useCallback((data) => {
+  const onSubmit = useCallback(async (data) => {
+    // Disable Submit Button
     setIsSubmitDisabled(true);
-    // Request From API
-    setTimeout(() => {
-      if (users.some((user) => user.username === data.username && user.password === data.password)) {
-        setError("");
-        const { username } = users.filter((user) => user.username === data.username)[0];
-        dispatch(login({ username, remember: rememberMeState }));
-        navigate("/");
-      } else {
-        setError("Username or password is wrong");
-      }
+
+    // Check User Account
+    try {
+      await axios.post("http://127.0.0.1:5000/login", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       setIsSubmitDisabled(false);
-    }, 600);
+      dispatch(login({ username: data.username, remember: rememberMeState }));
+      navigate("/");
+    } catch (err) {
+      const message = err.response.data.message;
+      setError(typeof message == "string" ? message : "There is a problem please try again later");
+      setIsSubmitDisabled(false);
+    }
   }, []);
 
   // Redirect to Home page when logged in

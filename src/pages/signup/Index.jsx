@@ -64,7 +64,9 @@ const Signup = () => {
 
       <CardContent sx={{ pt: 4, pb: 2 }}>
         {activeStep === 0 ? <CreateAccount handleNext={handleNext} setUserInfo={setUserInfo} /> : null}
-        {activeStep === 1 ? <OptionalInformation handleNext={handleNext} setUserInfo={setUserInfo} /> : null}
+        {activeStep === 1 ? (
+          <OptionalInformation handleNext={handleNext} userInfo={userInfo} setUserInfo={setUserInfo} />
+        ) : null}
         {activeStep === steps.length ? <Confirm handleBack={handleBack} userInfo={userInfo} /> : null}
       </CardContent>
     </Card>

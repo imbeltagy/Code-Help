@@ -18,9 +18,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "axios";
 
-// Fake API
-const usernames = ["beltagy", "khalid", "ali", "yasser"];
-
 const schema = yup
   .object()
   .shape({
@@ -40,57 +37,40 @@ const schema = yup
 const CreateAccount = ({ handleNext, setUserInfo }) => {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [isUsernameUnique, setIsUsernameUnique] = useState(true);
+  const [error, setError] = useState();
 
   const togglePasswordVisibility = useCallback(() => {
     setShowPassword((prev) => !prev);
   }, []);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { register, handleSubmit } = useForm({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     setIsSubmitDisabled(true);
+
+    // get only needed values from inputs
     const { username, password } = data;
-    axios
-      .post(
-        "http://127.0.0.1:5000/signin",
+
+    try {
+      const res = await axios.post(
+        "http://127.0.0.1:5000/signup",
         { username, password },
         {
           headers: {
             "Content-Type": "application/json",
           },
         }
-      )
-      .then((response) => {
-        console.log(response.data);
-        setUserInfo((prev) => ({ ...prev, username: data.username }));
-        setIsUsernameUnique(false);
-        setIsSubmitDisabled(false);
-        handleNext();
-      })
-      .catch((error) => {
-        console.log(error.data);
-        setIsSubmitDisabled(false);
-      });
-    // try {
-    //   const response = await ;
-    // } catch (error) {
-    // }
-    // Request From API
-    // setTimeout(() => {
-    //   if (usernames.every((username) => username !== data.username)) {
-    //     setIsUsernameUnique(true);
-    //     // Send Data To API
-    //     // next step
-    //   } else {
-    //   }
-    // }, 600);
+      );
+      setUserInfo((prev) => ({ ...prev, username: username }));
+      setIsSubmitDisabled(false);
+      handleNext();
+    } catch (err) {
+      const message = err.response.data.message;
+      setError(typeof message == "string" ? message : "There is a problem please try again later");
+      setIsSubmitDisabled(false);
+    }
   };
 
   return (
@@ -98,8 +78,8 @@ const CreateAccount = ({ handleNext, setUserInfo }) => {
       <Stack gap={3}>
         {/* Inputs */}
         <TextField
-          error={Boolean(errors.username) || !isUsernameUnique}
-          helperText={isUsernameUnique ? errors.username?.message : "Username is not available"}
+          error={Boolean(error)}
+          helperText={error ? error : null}
           {...register("username")}
           label="username"
           fullWidth
@@ -119,15 +99,13 @@ const CreateAccount = ({ handleNext, setUserInfo }) => {
                 </InputAdornment>
               ),
             }}
-            error={Boolean(errors[name])}
-            helperText={errors[name]?.message}
             {...register(name)}
             label={label}
             fullWidth
             key={name}
           />
         ))}
-        {/* Submit */}
+        {/* Submit Button */}
         <Button
           type="submit"
           disabled={isSubmitDisabled}
@@ -136,7 +114,7 @@ const CreateAccount = ({ handleNext, setUserInfo }) => {
         >
           Sign In
         </Button>
-        {/* Login */}
+        {/* Go to Login Page */}
         <Typography color="text.secondary" textAlign="center">
           Already have account?{" "}
           <Link component={NavLink} to="/login" fontSize=".9rem">
