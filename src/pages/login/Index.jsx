@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import { login } from "/src/features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+import fetchApi from "/src/app/fetchApi/Index";
 
 const Login = () => {
   const [error, setError] = useState("");
@@ -47,19 +47,14 @@ const Login = () => {
     setIsSubmitDisabled(true);
 
     // Check User Account
-    try {
-      await axios.post("http://127.0.0.1:5000/login", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+    const res = await fetchApi("login", { username: "beltagy5", password: "beltagy5" });
+    if (res.success) {
       setIsSubmitDisabled(false);
       dispatch(login({ username: data.username, remember: rememberMeState }));
       navigate("/");
-    } catch (err) {
-      const message = err.response.data.message;
-      setError(typeof message == "string" ? message : "There is a problem please try again later");
+    } else {
       setIsSubmitDisabled(false);
+      setError(res.message);
     }
   }, []);
 

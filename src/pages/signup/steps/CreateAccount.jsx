@@ -1,22 +1,11 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import {
-  Link,
-  Alert,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  IconButton,
-  InputAdornment,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Link, Button, IconButton, InputAdornment, Stack, TextField, Typography, Alert } from "@mui/material";
 import { useCallback, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import axios from "axios";
+import fetchApi from "/src/app/fetchApi/Index";
 
 const schema = yup
   .object()
@@ -53,37 +42,26 @@ const CreateAccount = ({ handleNext, setUserInfo }) => {
     // get only needed values from inputs
     const { username, password } = data;
 
-    try {
-      const res = await axios.post(
-        "http://127.0.0.1:5000/signup",
-        { username, password },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+    // Send Data To API
+    const res = await fetchApi("signup", { username, password });
+    if (res.success) {
       setUserInfo((prev) => ({ ...prev, username: username }));
       setIsSubmitDisabled(false);
       handleNext();
-    } catch (err) {
-      const message = err.response.data.message;
-      setError(typeof message == "string" ? message : "There is a problem please try again later");
+    } else {
       setIsSubmitDisabled(false);
+      setError(res.message);
     }
   };
 
   return (
     <form action="/" method="POST" onSubmit={handleSubmit(onSubmit)}>
       <Stack gap={3}>
+        {/* Error Message */}
+        {error ? <Alert severity="error">{error}</Alert> : null}
+
         {/* Inputs */}
-        <TextField
-          error={Boolean(error)}
-          helperText={error ? error : null}
-          {...register("username")}
-          label="username"
-          fullWidth
-        />
+        <TextField {...register("username")} label="username" fullWidth />
         {[
           { name: "password", label: "password" },
           { name: "confirmPassword", label: "confirm password" },
