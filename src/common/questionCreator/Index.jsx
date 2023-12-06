@@ -15,15 +15,14 @@ import {
 } from "@mui/material";
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import Signup2Action from "/src/common/signup2action/Index";
+import fetchApi from "../../app/fetchApi/Index";
 
 const QuestionCreator = () => {
   const { username, isLogged } = useSelector((state) => state.user);
   const [open, setOpen] = useState(false);
   const [alertType, setAlertType] = useState("success");
   const [openAlert, setOpenAlert] = useState(false);
-  const navigate = useNavigate();
   const titleInputRef = useRef();
   const textareaRef = useRef();
 
@@ -31,21 +30,25 @@ const QuestionCreator = () => {
     setOpen(true);
   };
 
-  const handlePost = () => {
+  const handlePost = async () => {
     const data = {
-      username,
+      author: username,
       title: titleInputRef.current.value,
       content: textareaRef.current.value,
     };
     // Send data to server
-    // If Response = true
-    // Save Question State
-    setAlertType("success");
-    setOpen(false);
+    const res = await fetchApi("new_question", data);
 
-    // If Error
-    // setAlertType("error")
-    setOpenAlert(true);
+    if (res.success) {
+      // ==== Save Question State
+      setAlertType("success");
+      setOpenAlert(true);
+      setOpen(false);
+      location.reload();
+    } else {
+      setAlertType("error");
+      setOpenAlert(true);
+    }
   };
 
   return (
@@ -112,8 +115,8 @@ const QuestionCreator = () => {
           {/* Alert */}
           <Snackbar open={openAlert} autoHideDuration={3000} onClose={() => setOpenAlert(false)}>
             <Alert onClose={() => setOpenAlert(false)} severity={alertType} sx={{ width: "100%" }}>
-              {alertType == "success" ? "Qeustion edited successfuly" : null}
-              {alertType == "error" ? "Error while edited question" : null}
+              {alertType == "success" ? "Qeustion created successfuly." : null}
+              {alertType == "error" ? "An error happend. Please try again after a few minutes." : null}
             </Alert>
           </Snackbar>
         </>
