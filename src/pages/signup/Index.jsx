@@ -1,16 +1,14 @@
-import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CreateAccount from "./steps/CreateAccount";
 import OptionalInformation from "./steps/OptionalInformation";
 import Confirm from "./steps/Confirm";
+import { login, getUserInfo } from "/src/features/user/userSlice";
 
 const steps = ["Create new account", "Add optional infomation"];
 
@@ -18,6 +16,12 @@ const Signup = () => {
   const [userInfo, setUserInfo] = useState({}); // save data from all steps
   const navigate = useNavigate();
   const isLogged = useSelector((state) => state.user.isLogged);
+  const dispatch = useDispatch();
+
+  const handleFinish = () => {
+    dispatch(login({ username: userInfo.username, remember: true }));
+    getUserInfo(userInfo.username);
+  };
 
   // Redirect to Home page when logged in
   useEffect(() => {
@@ -67,7 +71,9 @@ const Signup = () => {
         {activeStep === 1 ? (
           <OptionalInformation handleNext={handleNext} userInfo={userInfo} setUserInfo={setUserInfo} />
         ) : null}
-        {activeStep === steps.length ? <Confirm handleBack={handleBack} userInfo={userInfo} /> : null}
+        {activeStep === steps.length ? (
+          <Confirm handleBack={handleBack} userInfo={userInfo} handleFinish={handleFinish} />
+        ) : null}
       </CardContent>
     </Card>
   );

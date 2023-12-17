@@ -16,7 +16,7 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
-import { login } from "/src/features/user/userSlice";
+import { login, getUserInfo } from "/src/features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import fetchApi from "/src/app/fetchApi/Index";
 
@@ -47,14 +47,15 @@ const Login = () => {
     setIsSubmitDisabled(true);
 
     // Check User Account
-    const res = await fetchApi("login", { username: "beltagy5", password: "beltagy5" });
+    const res = await fetchApi("login", "POST", { username: data.username, password: data.password });
     if (res.success) {
       setIsSubmitDisabled(false);
       dispatch(login({ username: data.username, remember: rememberMeState }));
+      getUserInfo(userInfo.username);
       navigate("/");
     } else {
-      setIsSubmitDisabled(false);
       setError(res.message);
+      setIsSubmitDisabled(false);
     }
   }, []);
 

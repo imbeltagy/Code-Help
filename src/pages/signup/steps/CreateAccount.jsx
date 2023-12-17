@@ -43,15 +43,14 @@ const CreateAccount = ({ handleNext, setUserInfo }) => {
     const { username, password } = data;
 
     // Send Data To API
-    const res = await fetchApi("signup", { username, password });
+    const res = await fetchApi("signup", "POST", { username, password });
     if (res.success) {
       setUserInfo((prev) => ({ ...prev, username: username }));
-      setIsSubmitDisabled(false);
       handleNext();
     } else {
-      setIsSubmitDisabled(false);
       setError(res.message);
     }
+    res && setIsSubmitDisabled(false);
   };
 
   return (

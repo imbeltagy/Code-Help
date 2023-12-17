@@ -38,8 +38,8 @@ const OptionalInformation = ({ handleNext, setUserInfo }) => {
           </Button>
         </label>
       </Stack>
-      <TextField ref={nameInput} label="Display Name" />
-      <TextField ref={briefInput} multiline rows={5} label="Brief" />
+      <TextField inputRef={nameInput} label="Display Name" />
+      <TextField inputRef={briefInput} multiline rows={5} label="Brief" />
       <Box sx={{ display: "flex", flexDirection: "row" }}>
         <Box sx={{ flex: "1 1 auto" }} />
 

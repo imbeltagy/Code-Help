@@ -16,7 +16,7 @@ import {
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import Signup2Action from "/src/common/signup2action/Index";
-import fetchApi from "../../app/fetchApi/Index";
+import fetchApi from "/src/app/fetchApi/Index";
 
 const QuestionCreator = () => {
   const { username, isLogged } = useSelector((state) => state.user);

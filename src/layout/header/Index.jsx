@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
-import { DarkModeOutlined, Menu, Search, WbSunnyOutlined } from "@mui/icons-material";
-import { Button, IconButton, InputBase, Link, Stack, Toolbar } from "@mui/material";
-import React, { useCallback } from "react";
+import { Menu, Search } from "@mui/icons-material";
+import { Button, IconButton, InputBase, Stack, Toolbar } from "@mui/material";
+import React from "react";
 import Notifications from "./components/Notifications";
 import ProfileButton from "./components/ProfileButton";
 import { useDispatch, useSelector } from "react-redux";

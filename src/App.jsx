@@ -1,9 +1,17 @@
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
-import { useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import AppRoutes from "./AppRoutes";
+import { getUserInfo } from "/src/features/user/userSlice";
 
 function App() {
+  const username = useSelector((state) => state.user.username);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    username && dispatch(getUserInfo(username));
+  }, []);
+
   // Get Theme
   const mode = useSelector((state) => state.theme.mode);
 

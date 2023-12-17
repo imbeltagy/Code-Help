@@ -1,29 +1,27 @@
 import { Alert, Button, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
-import { login } from "/src/features/user/userSlice";
 import fetchApi from "/src/app/fetchApi/Index";
 
-const Confirm = ({ handleBack, userInfo }) => {
+const Confirm = ({ handleBack, userInfo, handleFinish }) => {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
-  const handleFinish = useCallback(async () => {
+  const handleConfirm = useCallback(async () => {
     setSending(true);
 
     // Get Only Needed Values
     const { username, displayName, brief } = userInfo;
 
     // Send Data To API
-    const changeNameRes = await fetchApi("signup", { username, displayName });
-    const changeBirefRes = await fetchApi("signup", { username, brief });
+    const changeNameRes = await fetchApi("change_display_name", "PUT", { username, newDisplayName: displayName });
+    const changeBirefRes = await fetchApi("change_brief", "PUT", { username, newBrief: brief });
     if (changeNameRes.success && changeBirefRes.success) {
-      dispatch(login({ username: data.username, remember: rememberMeState }));
+      console.log(changeNameRes, changeBirefRes);
       setSending(false);
-      navigate("/login");
+      navigate("/");
+      handleFinish();
     } else {
       setError("Please try after a few minutes. If it continues pleae contact us");
     }
@@ -45,8 +43,8 @@ const Confirm = ({ handleBack, userInfo }) => {
           </Typography>
           <Stack mt={3} direction="row" justifyContent="space-between">
             <Button onClick={handleBack}>Back</Button>
-            <Button variant="contained" onClick={handleFinish}>
-              Finish
+            <Button variant="contained" onClick={handleConfirm}>
+              Confirm
             </Button>
           </Stack>
         </>

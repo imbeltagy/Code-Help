@@ -1,12 +1,18 @@
 import axios from "axios";
 
-export default async function fetchApi(route, body) {
+export default async function fetchApi(route, method, body) {
+  const headers = {
+    "Content-Type": "application/json",
+  };
   try {
-    const response = await axios.post(`http://127.0.0.1:5000/${route}`, body, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response =
+      method == "GET"
+        ? await axios.get(`http://127.0.0.1:5000/${route}`)
+        : method == "POST"
+        ? await axios.post(`http://127.0.0.1:5000/${route}`, body, { headers })
+        : method == "PUT"
+        ? await axios.put(`http://127.0.0.1:5000/${route}`, body, { headers })
+        : method == "PATCH" && (await axios.patch(`http://127.0.0.1:5000/${route}`, body, { headers }));
 
     // Return the response data if the request was successful
     return { success: true, data: response.data };
@@ -14,7 +20,7 @@ export default async function fetchApi(route, body) {
     // Handle errors if the request fails
     if (err.response) {
       // The request was made and the server responded with a status code
-      const message = err.response.data.message;
+      const message = err.response.data.error || err.response.data.message;
       return { success: false, message };
     } else if (err.request) {
       // The request was made but no response was received

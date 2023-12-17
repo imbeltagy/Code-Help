@@ -16,6 +16,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "/src/features/user/userSlice";
 import { useNavigate } from "react-router-dom";
+import fetchApi from "/src/app/fetchApi/Index";
 
 // Profile Picture
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -27,35 +28,62 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-const ProfilePic = ({ userImg, displayName, userState }) => (
-  <StyledBadge
-    variant="dot"
-    color={userState === "online" ? "success" : userState === "busy" ? "warning" : userState === "offline" && "error"}
-  >
-    <Avatar src={userImg} alt={displayName} />
-  </StyledBadge>
-);
+const ProfilePic = ({ displayName, userState }) => {
+  const stringToColor = (string) => {
+    let hash = 0;
+    let i;
+
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = "#";
+
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+
+    return color;
+  };
+
+  return (
+    <StyledBadge
+      variant="dot"
+      color={userState === "online" ? "success" : userState === "busy" ? "warning" : userState === "offline" && "error"}
+    >
+      <Avatar {...(displayName && { sx: { bgcolor: stringToColor(displayName) } })} />
+    </StyledBadge>
+  );
+};
 
 const ProfileButton = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   // Get User Data
-  const username = useSelector((state) => state.user.username);
-  const [userData, setUserData] = useState({ displayName: "User Name", avatar: "", state: "online" });
-  const StatfulProfilePic = () => (
-    <ProfilePic userImg={userData.avatar} displayName={userData.displayName} userState={userData.state} />
-  );
+  const { username, displayName, state } = useSelector((state) => state.user);
+  const StatfulProfilePic = () => <ProfilePic displayName={displayName} userState={state || "offline"} />;
 
   const menuLinks = [
     { icon: <PersonOutlineOutlined />, text: "Profile", link: `/user/${username}` },
     { icon: <GroupOutlined />, text: "Friends", link: "/friends" },
   ];
 
-  useEffect(() => {
-    // Get Minimized Image From API
-    setUserData({ displayName: "User Name", avatar: "", state: "online" });
-  }, []);
+  // useEffect(() => {
+  //   async function getInfo() {
+  //     if (username) {
+  //       const res = await fetchApi(`get_user_info?username=${username}`, "GET");
+  //       if (res.success) {
+  //         const info = res.data.user_info;
+  //         setUserData({ displayName: info.display_name || username, state: info.state || "offline" });
+  //       }
+  //     }
+  //   }
+  //   getInfo();
+  // }, [username]);
 
   // Menu Functions
   const [anchorEl, setAnchorEl] = useState(null);
@@ -117,12 +145,12 @@ const ProfileButton = () => {
           <ListItemText
             primary={
               <Typography variant="subtitle2" fontWeight="600" letterSpacing=".3px">
-                {userData.displayName}
+                {displayName}
               </Typography>
             }
             secondary={
               <Typography variant="caption" letterSpacing=".5px">
-                {userData.userState}
+                {state}
               </Typography>
             }
           />
