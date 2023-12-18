@@ -5,11 +5,11 @@ import AppRoutes from "./AppRoutes";
 import { getUserInfo } from "/src/features/user/userSlice";
 
 function App() {
-  const username = useSelector((state) => state.user.username);
+  const { isLogged, username, userInfo } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    username && dispatch(getUserInfo(username));
+    isLogged && dispatch(getUserInfo(username));
   }, []);
 
   // Get Theme

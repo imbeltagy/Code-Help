@@ -2,15 +2,16 @@ import { Avatar, CardHeader, Divider } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Fragment, Suspense, lazy } from "react";
+import AvatarCircle from "/src/common/avatarCircle/Index";
 const AuthorActions = lazy(() => import("/src/common/question/components/authorActions/Index"));
 
 const QuestionHeader = ({ id, moreActions = [] }) => {
-  const { avatar, username, displayName, date } = useSelector((state) => state.questions.savedQuestions[id]);
+  const { username, displayName, publishDate } = useSelector((state) => state.questions.savedQuestions[id]);
   const currentUser = useSelector((state) => state.user.username);
   return (
     <>
       <CardHeader
-        avatar={<Avatar src={avatar} aria-label="recipe" />}
+        avatar={<AvatarCircle displayName={displayName} />}
         title={
           <Link
             to={`/users/${username}`}
@@ -21,7 +22,7 @@ const QuestionHeader = ({ id, moreActions = [] }) => {
           </Link>
         }
         titleTypographyProps={{ fontWeight: "500" }}
-        subheader={date}
+        subheader={publishDate}
         action={
           <>
             {currentUser === username ? (

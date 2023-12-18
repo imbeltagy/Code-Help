@@ -7,10 +7,12 @@ const initialState = Boolean(savedUsername)
   ? {
       isLogged: true,
       username: savedUsername,
+      isFetching: true,
     }
   : {
       isLogged: false,
       username: null,
+      isFetching: false,
     };
 
 export const userSlice = createSlice({
@@ -18,26 +20,26 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     login: (state, { payload: { username, remember } }) => {
-      state.isLogged = true;
-      state.username = username;
-
       // Save Data On The Browser
       remember ? localStorage.setItem("user", username) : sessionStorage.setItem("user", username);
+      location.reload();
     },
     logout: (state) => {
       state.isLogged = false;
       state.username = null;
       localStorage.removeItem("user");
       sessionStorage.removeItem("user");
+      location.reload();
     },
     setUserInfo: (state, action) => {
       const info = action.payload;
-      state.displayName = info.display_name;
+      state.displayName = info.display_name ? info.display_name : state.username;
       state.state = info.state;
       state.notificationsCount = info.notifications_count;
       state.friendsCount = info.friends_count;
       state.savedQuestionsCount = info.saved_questions_count;
       state.questions = info.user_questions;
+      state.isFetching = false;
     },
   },
 });

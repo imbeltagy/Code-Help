@@ -51,7 +51,6 @@ const Login = () => {
     if (res.success) {
       setIsSubmitDisabled(false);
       dispatch(login({ username: data.username, remember: rememberMeState }));
-      getUserInfo(userInfo.username);
       navigate("/");
     } else {
       setError(res.message);

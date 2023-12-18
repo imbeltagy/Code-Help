@@ -41,14 +41,19 @@ export const questionsSlice = createSlice({
     pushQuestion: (state, action) => {
       const id = action.payload.id;
       const data = action.payload.data;
+
       // If the question doesn't exist create an empty obj
-      state.savedQuestions[id] = Boolean(state.savedQuestions[id]) ? state.savedQuestions[id] : {};
-      state.keys[id] = state.keys[id] | id;
+      if (!state.keys.includes[id]) {
+        state.keys.push(id);
+        state.savedQuestions[id] = {};
+      }
+
       // Add new props or update the old props
       // Takes QuestionID and QuestionData
-      for (const key in action.payload.data) {
+      for (const key in data) {
         state.savedQuestions[id][key] = data[key];
       }
+
       // if date still in milliseconds transfrom it to a string
       let date = state.savedQuestions[id].date;
       date == parseFloat(date) ? (state.savedQuestions[id].date = ms2stringDate(date)) : null;

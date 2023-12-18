@@ -17,6 +17,7 @@ import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import Signup2Action from "/src/common/signup2action/Index";
 import fetchApi from "/src/app/fetchApi/Index";
+import { useNavigate } from "react-router-dom";
 
 const QuestionCreator = () => {
   const { username, isLogged } = useSelector((state) => state.user);
@@ -25,6 +26,7 @@ const QuestionCreator = () => {
   const [openAlert, setOpenAlert] = useState(false);
   const titleInputRef = useRef();
   const textareaRef = useRef();
+  const navigate = useNavigate();
 
   const handleOpen = () => {
     setOpen(true);
@@ -32,19 +34,19 @@ const QuestionCreator = () => {
 
   const handlePost = async () => {
     const data = {
-      author: username,
+      author_username: username,
       title: titleInputRef.current.value,
       content: textareaRef.current.value,
     };
     // Send data to server
-    const res = await fetchApi("new_question", data);
+    const res = await fetchApi("new_question", "POST", data);
 
     if (res.success) {
       // ==== Save Question State
       setAlertType("success");
       setOpenAlert(true);
       setOpen(false);
-      location.reload();
+      navigate("/");
     } else {
       setAlertType("error");
       setOpenAlert(true);
