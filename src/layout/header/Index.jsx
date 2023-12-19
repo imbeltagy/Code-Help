@@ -31,12 +31,6 @@ const Header = () => {
         <IconButton edge="start" onClick={() => dispatch(open())} sx={{ display: { lg: "none" }, marginRight: "1rem" }}>
           <Menu />
         </IconButton>
-
-        {/* Search Bar */}
-        <SearchBar direction="row" alignItems="center" p=".15rem .8rem">
-          <Search sx={{ width: "1.4rem" }} />
-          <InputBase />
-        </SearchBar>
       </Stack>
 
       {/* Buttons */}

@@ -16,7 +16,7 @@ import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "/src/features/user/userSlice";
 import { useNavigate } from "react-router-dom";
-import AvatarCircle from "/src/common/avatarCircle/Index";
+import AvatarPic from "/src/common/avatarPic/Index";
 
 // Profile Picture
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -34,7 +34,7 @@ const ProfilePic = ({ displayName, userState }) => {
       variant="dot"
       color={userState === "online" ? "success" : userState === "busy" ? "warning" : userState === "offline" && "error"}
     >
-      <AvatarCircle displayName={displayName} />
+      <AvatarPic displayName={displayName} />
     </StyledBadge>
   );
 };

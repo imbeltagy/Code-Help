@@ -1,6 +1,6 @@
 import { Avatar } from "@mui/material";
 
-const AvatarCircle = ({ displayName }) => {
+const AvatarPic = ({ displayName, size, ...props }) => {
   const stringToColor = (string) => {
     let hash = 0;
     let i;
@@ -21,7 +21,14 @@ const AvatarCircle = ({ displayName }) => {
     return color;
   };
 
-  return <Avatar {...(displayName && { sx: { bgcolor: stringToColor(displayName) } })} />;
+  return (
+    <Avatar
+      {...(displayName && {
+        sx: { bgcolor: stringToColor(displayName), width: size && `size`, height: size && `size` },
+      })}
+      {...props}
+    />
+  );
 };
 
-export default AvatarCircle;
+export default AvatarPic;
