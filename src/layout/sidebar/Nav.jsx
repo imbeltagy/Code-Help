@@ -8,6 +8,7 @@ import { NavLink } from "react-router-dom";
 const navigationLinks = [
   { text: "Home Page", icon: <Home color="primary" />, link: "/" },
   { text: "Friends Asks", icon: <Group color="primary" />, link: "/friends-asks" },
+  { text: "Users", icon: <Group color="primary" />, link: "/users" },
   { text: "Account Settings", icon: <Settings color="primary" />, link: "/settings" },
 ];
 

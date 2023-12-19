@@ -5,6 +5,8 @@ import Settings from "./pages/settings/Index";
 import { useSelector } from "react-redux";
 import Login from "./pages/login/Index";
 import Signup from "./pages/signup/Index";
+import Users from "./pages/users/Index";
+import SingleUserPage from "./pages/singleUserPage/Index";
 const Sidebar = lazy(() => import("./layout/sidebar/Index"));
 const Header = lazy(() => import("./layout/header/Index"));
 const HomePage = lazy(() => import("./pages/homePage/Index"));
@@ -63,9 +65,21 @@ const routes = {
     },
     {
       path: "friends-asks",
-      element: "Friends Asks",
+      element: "Comming Soon",
       suspense: true,
       loginRequired: true,
+    },
+    {
+      path: "users",
+      element: <Users />,
+      suspense: true,
+      loginRequired: false,
+    },
+    {
+      path: "users/:userID",
+      element: <SingleUserPage />,
+      suspense: true,
+      loginRequired: false,
     },
     {
       path: "settings",
