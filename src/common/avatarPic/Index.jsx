@@ -23,9 +23,12 @@ const AvatarPic = ({ displayName, size, ...props }) => {
 
   return (
     <Avatar
-      {...(displayName && {
-        sx: { bgcolor: stringToColor(displayName), width: size && `size`, height: size && `size` },
-      })}
+      {...{
+        sx: {
+          ...(displayName && { bgcolor: stringToColor(displayName) }),
+          ...(size && { width: `${size}`, height: `${size}` }),
+        },
+      }}
       {...props}
     />
   );
