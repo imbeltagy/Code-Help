@@ -1,7 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Alert, Box, Container, Stack, Link as MuiLink } from "@mui/material";
 import { BrowserRouter, Link, Outlet, Route, Routes } from "react-router-dom";
-import Settings from "./pages/settings/Index";
 import { useSelector } from "react-redux";
 import Login from "./pages/login/Index";
 import Signup from "./pages/signup/Index";
@@ -80,12 +79,6 @@ const routes = {
       element: <SingleUserPage />,
       suspense: true,
       loginRequired: false,
-    },
-    {
-      path: "settings",
-      element: <Settings />,
-      suspense: true,
-      loginRequired: true,
     },
     {
       path: "profile",

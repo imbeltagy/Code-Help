@@ -48,7 +48,7 @@ const ProfileButton = () => {
   const StatfulProfilePic = () => <ProfilePic displayName={displayName} userState={state || "offline"} />;
 
   const menuLinks = [
-    { icon: <PersonOutlineOutlined />, text: "Profile", link: `/user/${username}` },
+    { icon: <PersonOutlineOutlined />, text: "Profile", link: `/users/${username}` },
     { icon: <GroupOutlined />, text: "Friends", link: "/friends" },
   ];
 
