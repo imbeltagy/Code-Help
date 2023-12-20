@@ -5,10 +5,8 @@ import { useCallback, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 
 const Container = styled(Stack)(({ theme }) => ({
-  gap: ".5rem",
   borderRadius: "10rem",
   overflow: "hidden",
-  border: `2px solid ${theme.palette.text.disabled}`,
   "&:hover": { borderColor: theme.palette.text.secondary },
   "&:has(*:focus)": { borderColor: theme.palette.primary.main },
 }));
@@ -16,10 +14,12 @@ const Container = styled(Stack)(({ theme }) => ({
 const SearchBar = styled("div")(({ theme }) => ({
   width: "100%",
   background: theme.palette.background.paper,
-  borderRadius: theme.shape.borderRadius,
+  borderTopLeftRadius: "10rem",
+  borderBottomLeftRadius: "10rem",
+  border: `2px solid ${theme.palette.text.disabled}`,
+  borderRight: "unset",
   display: "flex",
   alignItems: "center",
-  gap: ".5rem",
 }));
 
 const Search = () => {
