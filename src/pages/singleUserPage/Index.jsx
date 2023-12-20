@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { Stack, Typography } from "@mui/material";
 import AvatarPic from "/src/common/avatarPic/Index";
 import FriendshipActions from "../users/components/FriendshipActions";
+import CurrentUserProfile from "./components/CurrentUserProfile";
 
 // Page Component
 const SingleUserPage = () => {
@@ -29,9 +30,10 @@ const SingleUserPage = () => {
       }
     };
     !isFetching && userID !== currentUser && setTimeout(getUsersInfo, 500); // setTimeout to avoide errors with database
-
-    !isFetching && userID === currentUser && setNoInfoMessage(`Welcome to your profile: ${currentUser}`);
   }, [isFetching, userID]);
+
+  // Current User Profile
+  if (userID === currentUser) return <CurrentUserProfile />;
 
   // Error or Loading
   if (!userInfo) return noInfoMessage;
