@@ -3,79 +3,62 @@ import Search from "./components/Search";
 import { useEffect, useState } from "react";
 import UserCard from "./components/UserCard";
 import { useSearchParams } from "react-router-dom";
-
-const fakeUsers = [
-  {
-    username: "user1",
-    displayName: "John Doe",
-    friendshipState: "pending",
-  },
-  {
-    username: "user2",
-    displayName: "Alice Smith",
-    friendshipState: "friends",
-  },
-  {
-    username: "user3",
-    displayName: "Bob Johnson",
-    friendshipState: "noRelation",
-  },
-  {
-    username: "user4",
-    displayName: "Emily Brown",
-    friendshipState: "friends",
-  },
-  {
-    username: "user5",
-    displayName: "David Wilson",
-    friendshipState: "requestedYou",
-  },
-  {
-    username: "user6",
-    displayName: "Sophia Garcia",
-    friendshipState: "friends",
-  },
-  {
-    username: "user7",
-    displayName: "James Martinez",
-    friendshipState: "noRelation",
-  },
-  {
-    username: "user8",
-    displayName: "Olivia Lopez",
-    friendshipState: "requestedYou",
-  },
-  {
-    username: "user9",
-    displayName: "William Lee",
-    friendshipState: "friends",
-  },
-  {
-    username: "user10",
-    displayName: "Ava Gonzalez",
-    friendshipState: "noRelation",
-  },
-];
+import fetchApi from "/src/app/fetchApi/Index";
+import { useSelector } from "react-redux";
 
 const Users = () => {
+  const { isFetching, username: currentUser } = useSelector((state) => state.user);
   const [searchParams, setSearchParams] = useSearchParams();
   const [users, setUsers] = useState([]);
   const [noUsersMsg, setNoUsersMsg] = useState("Start typing to show users..");
 
   // Search for Users
   useEffect(() => {
+    // Reset Loading State
+    setNoUsersMsg("Loading..");
+    setUsers([]);
+
     const searchVal = searchParams.get("search");
 
     if (searchVal) {
       // Fetch from API
-      //
-      setUsers(fakeUsers);
-      setNoUsersMsg("No users found.");
+      const fetchData = async () => {
+        const res = await fetchApi(`search?display_name=${searchVal}&current_user_username=${currentUser}`, "GET");
+        if (res.success) {
+          // Modify object props
+          const result = res.data
+            .map(({ display_name: displayName, relation_status, username }) => {
+              let friendshipState = "noRelation";
+
+              switch (relation_status) {
+                case "friend":
+                  friendshipState = "friends";
+                  break;
+                case "friend_request_sent":
+                  friendshipState = "pending";
+                  break;
+                case "friend_request_received":
+                  friendshipState = "requestedYou";
+                  break;
+              }
+              // console.log(username);
+
+              return { displayName, friendshipState, username };
+            })
+            .filter(({ username }) => currentUser != username);
+
+          // Set Users Info
+          setUsers(result);
+        } else {
+          setNoUsersMsg("No users found.");
+        }
+      };
+      !isFetching && fetchData();
     } else {
       setUsers([]);
       setNoUsersMsg("Start typing to show users..");
     }
-  }, [searchParams]);
+  }, [searchParams, isFetching]);
 
   return (
     <Stack pb={4} spacing={4} alignItems="center">

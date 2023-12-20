@@ -4,7 +4,7 @@ import fetchAPI from "/src/app/fetchAPI/Index";
 import { useSelector } from "react-redux";
 import { Stack, Typography } from "@mui/material";
 import AvatarPic from "/src/common/avatarPic/Index";
-import FriendshipActions from "./components/FriendshipActions";
+import FriendshipActions from "../users/components/FriendshipActions";
 
 // Page Component
 const SingleUserPage = () => {
@@ -24,17 +24,17 @@ const SingleUserPage = () => {
         setNoInfoMessage("User not exist.");
       }
     };
-    !isFetching && userID !== currentUser && getUsersInfo();
+    !isFetching && userID !== currentUser && setTimeout(getUsersInfo, 500); // setTimeout to avoide errors with database
 
     !isFetching && userID === currentUser && setNoInfoMessage(`Welcome to your profile: ${currentUser}`);
-  }, [isFetching]);
+  }, [isFetching, userID]);
 
   // Error or Loading
   if (!userInfo) return noInfoMessage;
 
   // User Info if Exist
   return (
-    <Stack>
+    <Stack alignItems="flex-start">
       {/* Avatar & Name */}
       <Stack marginBlock="1rem" spacing={1} direction="row" alignItems="flex-end">
         <AvatarPic displayName={userInfo.displayName} variant="rounded" />
@@ -42,7 +42,19 @@ const SingleUserPage = () => {
       </Stack>
 
       {/* Friendship Actions */}
-      <FriendshipActions friendship={userInfo.friendship} currentUser={currentUser} profileUser={userID} />
+
+      {userInfo.friendship == "friends" ? (
+        <FriendshipActions.friends selfUser={currentUser} otherUser={userID} />
+      ) : null}
+      {userInfo.friendship == "pending" ? (
+        <FriendshipActions.pending selfUser={currentUser} otherUser={userID} />
+      ) : null}
+      {userInfo.friendship == "requestedYou" ? (
+        <FriendshipActions.requestedYou selfUser={currentUser} otherUser={userID} />
+      ) : null}
+      {userInfo.friendship == "noRelation" ? (
+        <FriendshipActions.noRelation selfUser={currentUser} otherUser={userID} />
+      ) : null}
     </Stack>
   );
 };

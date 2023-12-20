@@ -1,45 +1,7 @@
-import { Button, Card, CardContent, Stack, Typography } from "@mui/material";
+import { Card, CardContent, Stack, Typography } from "@mui/material";
 import AvatarPic from "/src/common/avatarPic/Index";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-
-const ViewProfileBtn = ({ username }) => (
-  <Button component={Link} to={`./${username}`} variant="outlined" fullWidth>
-    view profile
-  </Button>
-);
-
-const PendingActions = () => (
-  <Stack spacing={1} width="100%">
-    <Button variant="outlined" fullWidth>
-      remove request
-    </Button>
-    <ViewProfileBtn />
-  </Stack>
-);
-
-const RequestedYouActions = () => (
-  <>
-    <Stack spacing={1} width="100%">
-      <Button variant="contained" fullWidth>
-        accept
-      </Button>
-      <Button variant="outlined" fullWidth>
-        decline
-      </Button>
-    </Stack>
-    <ViewProfileBtn />
-  </>
-);
-
-const NoRelationActions = () => (
-  <Stack spacing={1} width="100%">
-    <Button variant="contained" fullWidth>
-      add friend
-    </Button>
-    <ViewProfileBtn />
-  </Stack>
-);
+import FriendshipActions from "./FriendshipActions";
 
 // Main Component
 const UserCard = ({ username, displayName, friendshipState }) => {
@@ -58,10 +20,20 @@ const UserCard = ({ username, displayName, friendshipState }) => {
           </Typography>
 
           {/* Actions Buttons */}
-          {!isLogged || friendshipState == "friends" ? <ViewProfileBtn {...{ username }} /> : null}
-          {isLogged && friendshipState == "pending" ? <PendingActions /> : null}
-          {isLogged && friendshipState == "requestedYou" ? <RequestedYouActions /> : null}
-          {isLogged && friendshipState == "noRelation" ? <NoRelationActions /> : null}
+          <Stack spacing={1} width="100%">
+            {!isLogged || friendshipState == "friends" ? (
+              <FriendshipActions.friends selfUser={currentUser} otherUser={username} viewProfile fullWidth />
+            ) : null}
+            {isLogged && friendshipState == "pending" ? (
+              <FriendshipActions.pending selfUser={currentUser} otherUser={username} viewProfile fullWidth />
+            ) : null}
+            {isLogged && friendshipState == "requestedYou" ? (
+              <FriendshipActions.requestedYou selfUser={currentUser} otherUser={username} viewProfile fullWidth />
+            ) : null}
+            {isLogged && friendshipState == "noRelation" ? (
+              <FriendshipActions.noRelation selfUser={currentUser} otherUser={username} viewProfile fullWidth />
+            ) : null}
+          </Stack>
         </Stack>
       </CardContent>
     </Card>
