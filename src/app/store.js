@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import drawerReducer from "/src/features/drawer/drawerSlice";
 import themeReducer from "/src/features/theme/themeSlice";
 import userReducer from "/src/features/user/userSlice";
-import questionsSlice from "/src/features/questions/questionsSlice";
+import questionsReducer from "/src/features/questions/questionsSlice";
 import friendshipActionsReducer from "/src/features/friendshipActions/friendshipActionsSlice";
 
 export const store = configureStore({
@@ -10,6 +10,7 @@ export const store = configureStore({
     drawer: drawerReducer,
     theme: themeReducer,
     user: userReducer,
+    questions: questionsReducer,
     friendshipActions: friendshipActionsReducer,
   },
 });

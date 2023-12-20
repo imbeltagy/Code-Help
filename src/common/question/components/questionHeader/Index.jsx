@@ -6,7 +6,7 @@ import AvatarPic from "/src/common/avatarPic/Index";
 const AuthorActions = lazy(() => import("/src/common/question/components/authorActions/Index"));
 
 const QuestionHeader = ({ id, moreActions = [] }) => {
-  const { username, displayName, publishDate } = useSelector((state) => state.questions.savedQuestions[id]);
+  const { username, displayName, date } = useSelector((state) => state.questions.savedQuestions[id]);
   const currentUser = useSelector((state) => state.user.username);
   return (
     <>
@@ -22,7 +22,7 @@ const QuestionHeader = ({ id, moreActions = [] }) => {
           </Link>
         }
         titleTypographyProps={{ fontWeight: "500" }}
-        subheader={publishDate}
+        subheader={date}
         action={
           <>
             {currentUser === username ? (

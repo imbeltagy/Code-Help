@@ -20,22 +20,20 @@ const HomePage = () => {
       if (getQuestionsSuccess) {
         // Save Questions as a State
         const IDs = [];
-        data.forEach(
-          ({ id, author_username: username, title, content, publish_date: publishDate, solved_state: is_solved }) => {
-            const questionData = {
-              id,
-              username,
-              displayName: username,
-              title,
-              content,
-              publishDate,
-              is_solved,
-              is_saved: false,
-            };
-            IDs.push(id);
-            dispatch(pushQuestion({ id, data: questionData }));
-          }
-        );
+        data.forEach(({ id, author_username: username, title, content, publish_date, solved_state: is_solved }) => {
+          const questionData = {
+            id,
+            username,
+            displayName: username,
+            title,
+            content,
+            date: new Date(publish_date).getTime(),
+            is_solved,
+            is_saved: false,
+          };
+          IDs.push(id);
+          dispatch(pushQuestion({ id, data: questionData }));
+        });
         setQuestionsIDs(IDs);
       }
     };
