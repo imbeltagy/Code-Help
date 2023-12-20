@@ -48,7 +48,7 @@ const Search = () => {
           border: "none",
           outline: "none",
           cursor: "pointer",
-          bgcolor: "primary.light",
+          bgcolor: "primary.dark",
           paddingInline: ".7rem",
           "&:hover, &:focus": { bgcolor: "primary.main" },
           "&:active": { bgcolor: "primary.dark" },
