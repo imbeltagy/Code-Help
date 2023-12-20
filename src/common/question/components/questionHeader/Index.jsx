@@ -1,8 +1,8 @@
-import { Avatar, CardHeader, Divider } from "@mui/material";
+import { CardHeader, Divider } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Fragment, Suspense, lazy } from "react";
-import AvatarCircle from "/src/common/avatarCircle/Index";
+import AvatarPic from "/src/common/avatarPic/Index";
 const AuthorActions = lazy(() => import("/src/common/question/components/authorActions/Index"));
 
 const QuestionHeader = ({ id, moreActions = [] }) => {
@@ -11,7 +11,7 @@ const QuestionHeader = ({ id, moreActions = [] }) => {
   return (
     <>
       <CardHeader
-        avatar={<AvatarCircle displayName={displayName} />}
+        avatar={<AvatarPic displayName={displayName} />}
         title={
           <Link
             to={`/users/${username}`}
