@@ -1,15 +1,15 @@
 import styled from "@emotion/styled";
 import SearchIcon from "@mui/icons-material/Search";
-import { InputBase, Stack } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Box, InputBase, Stack } from "@mui/material";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 const Container = styled(Stack)(({ theme }) => ({
   gap: ".5rem",
   borderRadius: "10rem",
+  overflow: "hidden",
   border: `2px solid ${theme.palette.text.disabled}`,
   "&:hover": { borderColor: theme.palette.text.secondary },
-  "& path": { fill: theme.palette.text.secondary },
   "&:has(*:focus)": { borderColor: theme.palette.primary.main },
 }));
 
@@ -24,36 +24,39 @@ const SearchBar = styled("div")(({ theme }) => ({
 
 const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [searchVal, setSearchVal] = useState("");
+  const inputRef = useRef();
 
-  // Update Search param value
-  useEffect(() => {
-    const search = setTimeout(() => {
-      setSearchParams((params) => {
-        if (searchVal == "") {
-          params.delete("search");
-        } else {
-          params.set("search", searchVal);
-        }
-        return params;
-      });
-    }, 500);
-
-    return () => clearTimeout(search);
-  }, [searchVal]);
+  const handleSearch = useCallback(() => {
+    setSearchParams((params) => {
+      if (inputRef.current.value == "") {
+        params.delete("search");
+      } else {
+        params.set("search", inputRef.current.value);
+      }
+      return params;
+    });
+  }, [inputRef]);
 
   return (
-    <Container direction="row" alignItems="center" p=".15rem .8rem">
+    <Container direction="row" alignItems="stretch" onKeyDown={(e) => e.key == "Enter" && handleSearch()}>
       <SearchBar>
-        <SearchIcon sx={{ color: "#a2a2a2" }} />
-        <InputBase
-          onChange={(e) => {
-            setSearchVal(e.target.value);
-          }}
-          placeholder="Search..."
-          sx={{ flexGrow: 1 }}
-        />
+        <InputBase type="search" inputRef={inputRef} placeholder="Search..." sx={{ flexGrow: 1, p: ".15rem .8rem" }} />
       </SearchBar>
+      <Box
+        component="button"
+        sx={{
+          border: "none",
+          outline: "none",
+          cursor: "pointer",
+          bgcolor: "primary.light",
+          paddingInline: ".7rem",
+          "&:hover, &:focus": { bgcolor: "primary.main" },
+          "&:active": { bgcolor: "primary.dark" },
+        }}
+        onClick={() => handleSearch()}
+      >
+        <SearchIcon sx={{ color: "#fff" }} />
+      </Box>
     </Container>
   );
 };
