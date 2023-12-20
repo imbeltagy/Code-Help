@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, InputBase, Stack } from "@mui/material";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 
 const Container = styled(Stack)(({ theme }) => ({
