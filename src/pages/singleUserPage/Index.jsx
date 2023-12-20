@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import fetchAPI from "/src/app/fetchAPI/Index";
 import { useSelector } from "react-redux";
@@ -12,6 +12,10 @@ const SingleUserPage = () => {
   const [noInfoMessage, setNoInfoMessage] = useState("Loading...");
   const [userInfo, setUserInfo] = useState();
   const { isFetching, username: currentUser } = useSelector((state) => state.user);
+
+  const setFriendship = useCallback((val) => {
+    setUserInfo((prev) => ({ ...prev, friendship: val }));
+  }, []);
 
   useEffect(() => {
     const getUsersInfo = async () => {
@@ -44,16 +48,16 @@ const SingleUserPage = () => {
       {/* Friendship Actions */}
 
       {userInfo.friendship == "friends" ? (
-        <FriendshipActions.friends selfUser={currentUser} otherUser={userID} />
+        <FriendshipActions.friends selfUser={currentUser} otherUser={userID} setFriendship={setFriendship} />
       ) : null}
       {userInfo.friendship == "pending" ? (
-        <FriendshipActions.pending selfUser={currentUser} otherUser={userID} />
+        <FriendshipActions.pending selfUser={currentUser} otherUser={userID} setFriendship={setFriendship} />
       ) : null}
       {userInfo.friendship == "requestedYou" ? (
-        <FriendshipActions.requestedYou selfUser={currentUser} otherUser={userID} />
+        <FriendshipActions.requestedYou selfUser={currentUser} otherUser={userID} setFriendship={setFriendship} />
       ) : null}
       {userInfo.friendship == "noRelation" ? (
-        <FriendshipActions.noRelation selfUser={currentUser} otherUser={userID} />
+        <FriendshipActions.noRelation selfUser={currentUser} otherUser={userID} setFriendship={setFriendship} />
       ) : null}
     </Stack>
   );

@@ -34,10 +34,10 @@ const Users = () => {
                 case "friend":
                   friendshipState = "friends";
                   break;
-                case "friend_request_sent":
+                case "friend_request_received": // coflict with naming in api
                   friendshipState = "pending";
                   break;
-                case "friend_request_received":
+                case "friend_request_sent": // coflict with naming in api
                   friendshipState = "requestedYou";
                   break;
               }
