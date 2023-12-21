@@ -13,7 +13,11 @@ export default async function fetchApi(route, method, body) {
         ? await axios.post(`${rootUrl}/${route}`, body, { headers })
         : method == "PUT"
         ? await axios.put(`${rootUrl}/${route}`, body, { headers })
-        : method == "PATCH" && (await axios.patch(`${rootUrl}/${route}`, body, { headers }));
+        : method == "PATCH"
+        ? await axios.patch(`${rootUrl}/${route}`, body, { headers })
+        : method == "DELETE"
+        ? await axios.delete(`${rootUrl}/${route}`, body, { headers })
+        : null;
 
     // Return the response data if the request was successful
     return { success: true, data: response.data };

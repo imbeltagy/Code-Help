@@ -3,6 +3,7 @@ import { Box, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } 
 import { Fragment, useCallback, useState } from "react";
 import QuestionEditor from "./Editor";
 import { useSelector } from "react-redux";
+import fetchApi from "/src/app/fetchApi/Index";
 
 const AuthorActions = ({ id }) => {
   const [openEditor, setOpenEditor] = useState(false);
@@ -12,8 +13,29 @@ const AuthorActions = ({ id }) => {
   const handleEdit = () => {
     setOpenEditor(true);
   };
-  const handleDelete = () => {};
-  const handleSolve = () => {};
+
+  const handleDelete = () => {
+    const deleteQuestion = async () => {
+      const res = await fetchApi(`del_question?question_id=${id}`, "DELETE");
+      if (res.success) {
+        location.reload();
+      }
+    };
+    deleteQuestion();
+  };
+
+  const handleSolve = () => {
+    const changeSolvedState = async () => {
+      const res = await fetchApi("set_question_solved_state", "PUT", {
+        question_id: id,
+        new_solved_state: !isSolved,
+      });
+      if (res.success) {
+        location.reload();
+      }
+    };
+    changeSolvedState();
+  };
 
   const menuLinks = [
     { icon: <Edit color="primary" />, text: "Edit Question", action: handleEdit },
