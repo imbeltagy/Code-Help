@@ -15,34 +15,39 @@ import {
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { pushQuestion } from "/src/features/questions/questionsSlice";
+import fetchApi from "/src/app/fetchApi/Index";
 
 const QuestionEditor = ({ id, open, setOpen }) => {
   const titleInputRef = useRef();
   const textareaRef = useRef();
-  const { title, content } = useSelector((state) => state.questions.savedQuestions[id]);
+  const savedQuestion = useSelector((state) => state.questions.savedQuestions[id]);
   const dispatch = useDispatch();
   const [alertType, setAlertType] = useState("success");
   const [openAlert, setOpenAlert] = useState(false);
 
   const handleEdit = () => {
     const newData = {
-      title: titleInputRef.current.value,
-      content: textareaRef.current.value,
-    };
-    const data = {
-      questionId: id,
-      ...newData,
+      question_id: id,
+      new_title: titleInputRef.current.value,
+      new_content: textareaRef.current.value,
+      new_solved_state: savedQuestion.isSolved | false,
     };
     // Send data to server
-    // If Response = true
-    // Save Question State
-    dispatch(pushQuestion({ id, data: newData }));
-    setAlertType("success");
-    setOpen(false);
-
-    // If Error
-    // setAlertType("error")
-    setOpenAlert(true);
+    const sendData = async () => {
+      const res = await fetchApi("edit_question", "PUT", newData);
+      if (res.success) {
+        // Save Question State
+        dispatch(
+          pushQuestion({ id, data: { ...savedQuestion, title: newData.new_title, content: newData.new_content } })
+        );
+        setAlertType("success");
+        setOpen(false);
+      } else {
+        setAlertType("error");
+        setOpenAlert(true);
+      }
+    };
+    (newData.new_title != savedQuestion.title || newData.new_content != savedQuestion.content) && sendData();
   };
 
   return (
@@ -71,7 +76,12 @@ const QuestionEditor = ({ id, open, setOpen }) => {
             <CardContent>
               {/* Title */}
               <Box mb={1}>
-                <InputBase inputRef={titleInputRef} defaultValue={title} placeholder="Choose a title" fullWidth />
+                <InputBase
+                  inputRef={titleInputRef}
+                  defaultValue={savedQuestion.title}
+                  placeholder="Choose a title"
+                  fullWidth
+                />
               </Box>
 
               <Divider />
@@ -79,7 +89,7 @@ const QuestionEditor = ({ id, open, setOpen }) => {
               <Box mt={1} mb={2}>
                 <InputBase
                   inputRef={textareaRef}
-                  defaultValue={content}
+                  defaultValue={savedQuestion.content}
                   placeholder="Write your question..."
                   fullWidth
                   minRows={3}
