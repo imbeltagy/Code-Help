@@ -58,12 +58,17 @@ export const questionsSlice = createSlice({
       let date = state.savedQuestions[id].date;
       date == parseFloat(date) ? (state.savedQuestions[id].date = ms2stringDate(date)) : null;
     },
-    pushAnswers: (state, action) => {
-      // Takes QuestionID and Object of Answers
+    pushAnswers: (state, { payload: { questionId, answers } }) => {
+      // Modify Date
+      const modifiedAnswers = { ...answers };
+      Object.keys(answers).forEach((key) => {
+        let date = answers[key].date;
+        date == parseFloat(date) ? (answers[key].date = ms2stringDate(date)) : null;
+      });
       // Merge Answers Without Duplicating
-      state.savedAnswers[action.payload.id] = {
-        ...state.savedAnswers[action.payload.id],
-        ...action.payload.data,
+      state.savedAnswers[questionId] = {
+        ...state.savedAnswers[questionId],
+        ...modifiedAnswers,
       };
     },
     changeSavedState: (state, action) => {

@@ -3,25 +3,7 @@ import Answer from "./Answer";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { pushAnswers } from "/src/features/questions/questionsSlice";
-
-// Temp API Data
-const postsAnswers = {
-  123: {
-    1: { username: "Alice", content: "Looks delicious!" },
-    2: { username: "Bob", content: "I'll definitely try this recipe!" },
-    3: { username: "Charlie", content: "Great idea for a healthy meal!" },
-  },
-  749: {
-    1: { username: "David", content: "Love this recipe!" },
-    2: { username: "Emily", content: "One of my favorite dishes!" },
-    3: { username: "Frank", content: "Can't wait to make it again!" },
-  },
-  196: {
-    1: { username: "Grace", content: "I make this regularly, it's amazing!" },
-    2: { username: "Henry", content: "Perfect for a weekend dinner!" },
-    3: { username: "Isabella", content: "Love the combination of flavors!" },
-  },
-};
+import fetchApi from "/src/app/fetchApi/Index";
 
 const AnswersSection = ({ id }) => {
   const dispatch = useDispatch();
@@ -29,17 +11,39 @@ const AnswersSection = ({ id }) => {
 
   // Request Data From API
   useEffect(() => {
-    setTimeout(() => {
-      dispatch(pushAnswers({ id, data: postsAnswers[id] }));
-    }, 500);
+    const getAnswers = async () => {
+      const res = await fetchApi(`get_question_answers?question_id=${id}`, "GET");
+      if (res.success) {
+        const answers = {};
+        // Refactor Answers keys
+        res.data.answers.forEach(({ answer_id, username, display_name, content, publish_date }) => {
+          answers[answer_id] = {
+            username,
+            displayName: display_name,
+            content,
+            date: new Date(publish_date).getTime(),
+          };
+        });
+        console.log(answers);
+
+        // Save Answers
+        dispatch(
+          pushAnswers({
+            questionId: id,
+            answers,
+          })
+        );
+      }
+    };
+    getAnswers();
   }, []);
 
   return (
     <CardContent>
       <Stack gap={2} paddingBlock={2}>
-        {Object.keys(answers).map((key) => (
-          <Answer username={answers[key].username} content={answers[key].content} key={key} />
-        ))}
+        {Object.keys(answers).map((key) => {
+          return <Answer {...answers[key]} key={key} />;
+        })}
       </Stack>
     </CardContent>
   );
