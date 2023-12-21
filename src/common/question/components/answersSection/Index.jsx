@@ -24,8 +24,6 @@ const AnswersSection = ({ id }) => {
             date: new Date(publish_date).getTime(),
           };
         });
-        console.log(answers);
-
         // Save Answers
         dispatch(
           pushAnswers({
