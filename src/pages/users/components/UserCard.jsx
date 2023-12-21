@@ -9,6 +9,30 @@ const UserCard = ({ username, displayName, friendshipState }) => {
   const { isLogged, username: currentUser } = useSelector((state) => state.user);
   const [friendship, setFriendship] = useState(friendshipState);
 
+  // The props which will be passed to Buttons
+  const actionsProps = {
+    selfUser: currentUser,
+    otherUser: username,
+    setFriendship: setFriendship,
+    viewProfile: true,
+    fullWidth: true,
+  };
+
+  const action = () => {
+    switch (friendship) {
+      case "friends":
+        return <FriendshipActions.friends {...actionsProps} />;
+      case "pending":
+        return <FriendshipActions.pending {...actionsProps} />;
+      case "requestedYou":
+        return <FriendshipActions.requestedYou {...actionsProps} />;
+      case "noRelation":
+        return <FriendshipActions.noRelation {...actionsProps} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <Card sx={{ height: "100%", display: "grid", alignItems: "center", paddingBlock: "1rem" }}>
       <CardContent>
@@ -23,42 +47,7 @@ const UserCard = ({ username, displayName, friendshipState }) => {
 
           {/* Actions Buttons */}
           <Stack spacing={1} width="100%">
-            {!isLogged || friendship == "friends" ? (
-              <FriendshipActions.friends
-                selfUser={currentUser}
-                otherUser={username}
-                setFriendship={setFriendship}
-                viewProfile
-                fullWidth
-              />
-            ) : null}
-            {isLogged && friendship == "pending" ? (
-              <FriendshipActions.pending
-                selfUser={currentUser}
-                otherUser={username}
-                setFriendship={setFriendship}
-                viewProfile
-                fullWidth
-              />
-            ) : null}
-            {isLogged && friendship == "requestedYou" ? (
-              <FriendshipActions.requestedYou
-                selfUser={currentUser}
-                otherUser={username}
-                setFriendship={setFriendship}
-                viewProfile
-                fullWidth
-              />
-            ) : null}
-            {isLogged && friendship == "noRelation" ? (
-              <FriendshipActions.noRelation
-                selfUser={currentUser}
-                otherUser={username}
-                setFriendship={setFriendship}
-                viewProfile
-                fullWidth
-              />
-            ) : null}
+            {!isLogged ? <FriendshipActions.ViewProfileBtn username={username} fullWidth /> : action()}
           </Stack>
         </Stack>
       </CardContent>

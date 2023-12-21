@@ -14,6 +14,8 @@ const ViewProfileBtn = ({ username, fullWidth }) => (
   </Button>
 );
 
+FriendshipActions.ViewProfileBtn = ({ username, fullWidth }) => <ViewProfileBtn {...{ username, fullWidth }} />;
+
 // Friends Action
 FriendshipActions.friends = ({ selfUser, otherUser, viewProfile, fullWidth, setFriendship }) => {
   const disabled = useSelector((state) => state.friendshipActions.disabled);
