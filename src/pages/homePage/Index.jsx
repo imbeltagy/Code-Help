@@ -1,6 +1,6 @@
 import { Stack } from "@mui/material";
 import QuestionCreator from "/src/common/questionCreator/Index";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { pushQuestion } from "/src/features/questions/questionsSlice";
 import NoAnswersQuestion from "/src/common/question/NoAnswersQuestion";
@@ -30,7 +30,7 @@ const HomePage = () => {
             isSolved,
             isSaved: false,
           };
-          dispatch(pushQuestion({ id, data: questionData }));
+          dispatch(pushQuestion(questionData));
         });
       }
     };

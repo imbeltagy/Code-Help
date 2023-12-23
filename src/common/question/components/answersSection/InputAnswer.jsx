@@ -2,48 +2,47 @@ import { useTheme } from "@emotion/react";
 import { Send } from "@mui/icons-material";
 import { Alert, Box, IconButton, InputBase, Link, Stack } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { pushAnswers, replaceAnswerId } from "/src/features/questions/questionsSlice";
+import { pushAnswers, modifyAnswer } from "/src/features/questions/questionsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 import fetchApi from "/src/app/fetchApi/Index";
 
 const InputAnswer = ({ id }) => {
-  const dispatch = useDispatch();
   const mode = useTheme().palette.mode;
+  const { username: currentUser, displayName, isLogged } = useSelector((state) => state.user);
+  const questionApiId = useSelector((state) => state.questions.savedQuestions[id]?.id);
+  const inputRef = useRef();
+  const [errorMsg, setErrorMsg] = useState();
   const [inputVal, setInputVal] = useState("");
   const [isShiftPressed, setIsShiftPressed] = useState(false);
-  const ref = useRef();
-  const { username: currentUser, displayName, isLogged } = useSelector((state) => state.user);
-  const [errorMsg, setErrorMsg] = useState();
+  const dispatch = useDispatch();
 
   // Focus On Input on Mount
   useEffect(() => {
-    isLogged && ref.current.focus();
+    isLogged && inputRef.current.focus();
   }, [isLogged]);
 
   const publishAnswer = useCallback(() => {
     // save Input value
-    const content = ref.current.value;
+    const content = inputRef.current.value;
 
     const sendAnswer = async () => {
       // Update The UI Till Calling API
-      // Generate temp ID for the answer till getting it again from server
-      const tempID = Math.random();
-
+      const answerId = new Date().getTime();
       // save Answer As Local State
       dispatch(
         pushAnswers({
           questionId: id,
-          answers: { [tempID]: { username: currentUser, displayName, date: new Date().getTime(), content } },
+          answers: { [answerId]: { username: currentUser, displayName, date: new Date().getTime(), content } },
         })
       );
 
       // Reset Input Value
-      ref.current.value = "";
+      inputRef.current.value = "";
 
       // Push Answer To Server
       const res = await fetchApi("answer_question", "POST", {
-        question_id: id,
+        question_id: questionApiId,
         answer_author: currentUser,
         content,
       });
@@ -51,7 +50,7 @@ const InputAnswer = ({ id }) => {
       if (res.success) {
         // Remove Error if Exist
         setErrorMsg(null);
-        dispatch(replaceAnswerId({ questionId: id, oldAnswerId: tempID, newAnswerId: res.data.answer_id }));
+        dispatch(modifyAnswer({ questionId: id, answerId, newData: { id: res.data.answer_id } }));
       } else {
         // Set Error Message
         setErrorMsg(
@@ -76,7 +75,7 @@ const InputAnswer = ({ id }) => {
       {isLogged ? (
         <>
           <InputBase
-            inputRef={ref}
+            inputRef={inputRef}
             multiline
             maxRows={3}
             onChange={(e) => setInputVal(e.target.value)}
@@ -97,7 +96,7 @@ const InputAnswer = ({ id }) => {
             disabled={!inputVal}
             onClick={() => {
               publishAnswer();
-              ref.current.focus();
+              inputRef.current.focus();
             }}
           >
             <Send />

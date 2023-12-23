@@ -38,59 +38,38 @@ export const questionsSlice = createSlice({
   name: "questions",
   initialState,
   reducers: {
-    pushQuestion: (state, action) => {
-      const id = action.payload.id;
-      const data = action.payload.data;
-
-      // If the question doesn't exist create an empty obj
-      if (!state.keys.includes[id]) {
-        state.keys.push(id);
-        state.savedQuestions[id] = {};
-      }
-
-      // Add new props or update the old props
-      // Takes QuestionID and QuestionData
-      for (const key in data) {
-        state.savedQuestions[id][key] = data[key];
-      }
-
-      // if date still in milliseconds transfrom it to a string
-      let date = state.savedQuestions[id].date;
-      date == parseFloat(date) ? (state.savedQuestions[id].date = ms2stringDate(date)) : null;
+    pushQuestion: (state, { payload: { date: id, ...question } }) => {
+      state.keys.push(id);
+      state.savedQuestions[id] = { ...question, date: ms2stringDate(id) };
     },
-    removeQuestion: (state, { payload }) => {
-      delete state.savedQuestions[payload];
-    },
-    replaceQuestionId: (state, { payload: { oldId, newId } }) => {
-      // Change SavedQuestions ID
-      state.savedQuestions = {
-        ...state.savedQuestions,
-        [newId]: state.savedQuestions[oldId],
+    modifyQuestion: (state, { payload: { id, newData } }) => {
+      state.savedQuestions[id] = {
+        ...state.savedQuestions[id],
+        ...newData,
       };
-      delete state.savedQuestions[oldId];
-
-      // Change Keys ID
-      state.keys = state.keys.map((key) => (key == oldId ? newId : key));
     },
-    pushAnswers: (state, { payload: { questionId, answers } }) => {
-      // Modify Date
+    removeQuestion: (state, { payload: id }) => {
+      delete state.savedQuestions[id];
+    },
+    Answers: (state, { payload: { questionId, answers } }) => {
       const modifiedAnswers = { ...answers };
-      Object.keys(answers).forEach((key) => {
-        let date = answers[key].date;
-        date == parseFloat(date) ? (answers[key].date = ms2stringDate(date)) : null;
+
+      // Convert Answers Date To String
+      Object.keys(modifiedAnswers).forEach((key) => {
+        modifiedAnswers[key].date = ms2stringDate(key);
       });
+
       // Merge Answers Without Duplicating
       state.savedAnswers[questionId] = {
-        ...modifiedAnswers,
         ...state.savedAnswers[questionId],
+        ...modifiedAnswers,
       };
     },
-    replaceAnswerId: (state, { payload: { questionId, oldAnswerId, newAnswerId } }) => {
-      state.savedAnswers[questionId] = {
-        ...state.savedAnswers[questionId],
-        [newAnswerId]: state.savedAnswers[questionId][oldAnswerId],
+    modifyAnswer: (state, { payload: { questionId, answerId, newData } }) => {
+      state.savedAnswers[questionId][answerId] = {
+        ...state.savedAnswers[questionId][answerId],
+        ...newData,
       };
-      delete state.savedAnswers[questionId][oldAnswerId];
     },
     removeAnswer: (state, { payload: { questionId, answerId } }) => {
       delete state.savedAnswers[questionId][answerId];
@@ -108,13 +87,13 @@ export const questionsSlice = createSlice({
 
 export const {
   pushQuestion,
+  modifyQuestion,
+  removeQuestion,
   pushAnswers,
+  modifyAnswer,
+  removeAnswer,
   changeSavedState,
   changeSolvedState,
-  replaceAnswerId,
-  removeAnswer,
-  replaceQuestionId,
-  removeQuestion,
 } = questionsSlice.actions;
 
 export default questionsSlice.reducer;

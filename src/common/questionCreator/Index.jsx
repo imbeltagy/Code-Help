@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Signup2Action from "/src/common/signup2action/Index";
 import fetchApi from "/src/app/fetchApi/Index";
 import { open as openNotification } from "/src/features/notification/notificationSlice";
-import { pushQuestion, removeQuestion, replaceQuestionId } from "/src/features/questions/questionsSlice";
+import { pushQuestion, removeQuestion } from "/src/features/questions/questionsSlice";
 
 const QuestionCreator = () => {
   const { username, displayName, isLogged } = useSelector((state) => state.user);
@@ -25,22 +25,18 @@ const QuestionCreator = () => {
       content: textareaRef.current.value,
     };
     // Update The UI Till Calling API
-    // Generate temp ID for the answer till getting it again from server
-    const tempID = Math.random();
+    const date = new Date().getTime();
 
     // save Answer As Local State
     dispatch(
       pushQuestion({
-        id: tempID,
-        data: {
-          username,
-          displayName,
-          date: new Date().getTime(),
-          title: data.title,
-          content: data.content,
-          isSolved: false,
-          isSaved: false,
-        },
+        username,
+        displayName,
+        date,
+        title: data.title,
+        content: data.content,
+        isSolved: false,
+        isSaved: false,
       })
     );
 
@@ -50,12 +46,10 @@ const QuestionCreator = () => {
     if (res.success) {
       dispatch(openNotification({ message: "Qeustion created successfuly.", type: "success" }));
       setOpen(false);
-      // Save Question State
-      dispatch(replaceQuestionId({ oldId: tempID, newId: res.data.question_id }));
     } else {
       dispatch(openNotification({ message: "An error happend. Please try again after a few minutes.", type: "error" }));
       // Remove The Temp Question
-      dispatch(removeQuestion(tempID));
+      dispatch(removeQuestion(date));
     }
   };
 

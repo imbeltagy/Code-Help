@@ -7,7 +7,7 @@ import fetchApi from "/src/app/fetchApi/Index";
 
 const AuthorActions = ({ id }) => {
   const [openEditor, setOpenEditor] = useState(false);
-  const isSolved = useSelector((state) => state.questions.savedQuestions[id].isSolved);
+  const { isSolved, id: questionId } = useSelector((state) => state.questions.savedQuestions[id]);
 
   // Menu Items
   const handleEdit = () => {
@@ -16,7 +16,7 @@ const AuthorActions = ({ id }) => {
 
   const handleDelete = () => {
     const deleteQuestion = async () => {
-      const res = await fetchApi(`del_question?question_id=${id}`, "DELETE");
+      const res = await fetchApi(`del_question?question_id=${questionId}`, "DELETE");
       if (res.success) {
         location.reload();
       }
@@ -27,7 +27,7 @@ const AuthorActions = ({ id }) => {
   const handleSolve = () => {
     const changeSolvedState = async () => {
       const res = await fetchApi("set_question_solved_state", "PUT", {
-        question_id: id,
+        question_id: questionId,
         new_solved_state: !isSolved,
       });
       if (res.success) {

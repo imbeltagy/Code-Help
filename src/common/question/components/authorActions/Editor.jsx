@@ -2,7 +2,7 @@ import { Close } from "@mui/icons-material";
 import { Box, Button, Card, CardContent, CardHeader, Divider, IconButton, InputBase, Modal } from "@mui/material";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { pushQuestion } from "/src/features/questions/questionsSlice";
+import { modifyQuestion } from "/src/features/questions/questionsSlice";
 import fetchApi from "/src/app/fetchApi/Index";
 import { open as openNotification } from "/src/features/notification/notificationSlice";
 
@@ -10,11 +10,12 @@ const QuestionEditor = ({ id, open, setOpen }) => {
   const titleInputRef = useRef();
   const textareaRef = useRef();
   const savedQuestion = useSelector((state) => state.questions.savedQuestions[id]);
+  const questionId = savedQuestion.id;
   const dispatch = useDispatch();
 
   const handleEdit = () => {
     const newData = {
-      question_id: id,
+      question_id: questionId,
       new_title: titleInputRef.current.value,
       new_content: textareaRef.current.value,
       new_solved_state: savedQuestion.isSolved | false,
@@ -24,13 +25,11 @@ const QuestionEditor = ({ id, open, setOpen }) => {
     const sendData = async () => {
       const res = await fetchApi("edit_question", "PUT", newData);
       if (res.success) {
-        // Save Question State
-        dispatch(
-          pushQuestion({ id, data: { ...savedQuestion, title: newData.new_title, content: newData.new_content } })
-        );
-
+        // Update Question
+        dispatch(modifyQuestion({ id, newData: { title: newData.new_title, content: newData.new_content } }));
         // Open Success Notification
         dispatch(openNotification({ message: "Qeustion edited successfuly.", type: "success" }));
+        // Close Editor
         setOpen(false);
       } else {
         // Open Error Notification

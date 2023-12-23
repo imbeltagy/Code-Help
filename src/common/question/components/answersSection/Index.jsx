@@ -7,6 +7,7 @@ import fetchApi from "/src/app/fetchApi/Index";
 
 const AnswersSection = ({ id }) => {
   const dispatch = useDispatch();
+  const questionId = useSelector((state) => state.questions.savedQuestions[id].id);
   const answers = useSelector((state) => state.questions.savedAnswers[id]) || {};
   const [noAnswersMsg, setNoAnswersMsg] = useState("Loading...");
   const [errorMsg, setErrorMsg] = useState();
@@ -14,17 +15,19 @@ const AnswersSection = ({ id }) => {
   // Request Data From API
   useEffect(() => {
     const getAnswers = async () => {
-      const res = await fetchApi(`get_question_answers?question_id=${id}`, "GET");
+      const res = await fetchApi(`get_question_answers?question_id=${questionId}`, "GET");
       if (res.success) {
         // init and object to get answers
         const answers = {};
         // Refactor Answers keys
         res.data.answers.forEach(({ answer_id, username, display_name, content, publish_date }) => {
-          answers[answer_id] = {
+          const date = new Date(publish_date).getTime();
+          answers[date] = {
+            id: answer_id,
             username,
             displayName: display_name,
             content,
-            date: new Date(publish_date).getTime(),
+            date,
           };
         });
 
