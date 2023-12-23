@@ -15,7 +15,8 @@ const QuestionsPreview = ({ headding, questionsIds, isFetching }) => {
       );
       if (res.success) {
         setQuestions(
-          res.data.map((item) => ({
+          res.data.map((item, i) => ({
+            id: ids[i],
             title: item.question_title,
             content: item.question_content,
             isSolved: item.is_solved,
