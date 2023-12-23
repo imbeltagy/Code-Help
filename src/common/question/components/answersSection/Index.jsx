@@ -1,5 +1,5 @@
 import { Alert, CardContent, Stack } from "@mui/material";
-import Answer from "./Answer";
+import Answer from "./answer/Index";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { pushAnswers } from "/src/features/questions/questionsSlice";
@@ -55,7 +55,7 @@ const AnswersSection = ({ id }) => {
         {errorMsg ? <Alert severity="error">{errorMsg}</Alert> : null}
         {Object.keys(answers).length == 0 && !errorMsg ? noAnswersMsg : null}
         {Object.keys(answers).map((key) => {
-          return <Answer {...answers[key]} key={key} />;
+          return <Answer {...answers[key]} questionId={id} answerId={key} key={key} />;
         })}
       </Stack>
     </CardContent>

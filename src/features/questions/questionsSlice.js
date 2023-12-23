@@ -71,6 +71,16 @@ export const questionsSlice = createSlice({
         ...modifiedAnswers,
       };
     },
+    replaceAnswerId: (state, { payload: { questionId, oldAnswerId, newAnswerId } }) => {
+      state.savedAnswers[questionId] = {
+        ...state.savedAnswers[questionId],
+        [newAnswerId]: state.savedAnswers[questionId][oldAnswerId],
+      };
+      delete state.savedAnswers[questionId][oldAnswerId];
+    },
+    removeAnswer: (state, { payload: { questionId, answerId } }) => {
+      delete state.savedAnswers[questionId][answerId];
+    },
     changeSavedState: (state, action) => {
       // Takes QuestionID and state(boolean)
       state.savedQuestions[action.payload.id].isSaved = action.payload.state;
@@ -82,6 +92,7 @@ export const questionsSlice = createSlice({
   },
 });
 
-export const { pushQuestion, pushAnswers, changeSavedState, changeSolvedState } = questionsSlice.actions;
+export const { pushQuestion, pushAnswers, changeSavedState, changeSolvedState, replaceAnswerId, removeAnswer } =
+  questionsSlice.actions;
 
 export default questionsSlice.reducer;

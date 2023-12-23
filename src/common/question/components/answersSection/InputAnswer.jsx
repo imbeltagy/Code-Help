@@ -2,7 +2,7 @@ import { useTheme } from "@emotion/react";
 import { Send } from "@mui/icons-material";
 import { Alert, Box, IconButton, InputBase, Link, Stack } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { pushAnswers } from "/src/features/questions/questionsSlice";
+import { pushAnswers, replaceAnswerId } from "/src/features/questions/questionsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 import fetchApi from "/src/app/fetchApi/Index";
@@ -51,6 +51,7 @@ const InputAnswer = ({ id }) => {
       if (res.success) {
         // Remove Error if Exist
         setErrorMsg(null);
+        dispatch(replaceAnswerId({ questionId: id, oldAnswerId: tempID, newAnswerId: res.data.answer_id }));
       } else {
         // Set Error Message
         setErrorMsg(
