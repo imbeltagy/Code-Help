@@ -5,35 +5,44 @@ import { changeSavedState } from "/src/features/questions/questionsSlice";
 import { Bookmark } from "@mui/icons-material";
 import Signup2Action from "/src/common/signup2action/Index";
 import { open as openNotification } from "/src/features/notification/notificationSlice";
+import fetchApi from "/src/app/fetchApi/Index";
 
 const SaveButton = ({ id }) => {
   const dispatch = useDispatch();
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
-  const isSaved = useSelector((state) => state.questions.savedQuestions[id].isSaved);
-  const isLogged = useSelector((state) => state.user.isLogged);
+  const { id: questionApiId, isSaved } = useSelector((state) => state.questions.savedQuestions[id]);
+  const { username, isLogged } = useSelector((state) => state.user);
 
   const handleSave = () => {
     if (isLogged) {
       // Update UI till API response
-      dispatch(changeSavedState({ id, state: !isSaved }));
+      dispatch(changeSavedState({ id, newState: !isSaved }));
 
       // Send Data To API
-      setTimeout(() => {
-        const res = { success: true };
-        if (res.success) {
-          // Open Sucess Notification
-          const message = isSaved ? "Unsaved the question succesfuly!" : "Saved the question succesfuly!";
-          dispatch(openNotification({ message, type: "success" }));
+      const callAPI = async () => {
+        if (isSaved) {
+          // Unsave
+          const res = await fetchApi("unsave_question", "PATCH", { username, question_id: questionApiId });
+          if (res.success) {
+            dispatch(openNotification({ message: "Unsaved the question succesfuly!", type: "success" }));
+          } else {
+            dispatch(openNotification({ message: "Error while ussaving question!", type: "error" }));
+            // Reset Saved State
+            dispatch(changeSavedState({ id, newState: true }));
+          }
         } else {
-          // Open Error Notification
-          const message = isSaved ? "Error while ussaving question!" : "Error while saving question!";
-          dispatch(openNotification({ message, type: "error" }));
-          // Remove Saved State
-          dispatch(changeSavedState({ id, state: false }));
+          // Save
+          const res = await fetchApi("save_question", "PATCH", { username, question_id: questionApiId });
+          if (res.success) {
+            dispatch(openNotification({ message: "Saved the question succesfuly!", type: "success" }));
+          } else {
+            dispatch(openNotification({ message: "Error while saving question!", type: "error" }));
+            // Reset Saved State
+            dispatch(changeSavedState({ id, newState: false }));
+          }
         }
-      }, 200);
-    } else {
-      setIsSignupModalOpen(true);
+      };
+      callAPI();
     }
   };
 

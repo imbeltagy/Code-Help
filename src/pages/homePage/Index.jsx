@@ -19,19 +19,21 @@ const HomePage = () => {
       const { success: getQuestionsSuccess, data } = await fetchApi(`latest_questions?count=10`, "GET");
       if (getQuestionsSuccess) {
         // Save Questions as a State
-        data.forEach(({ id, author_username: username, title, content, publish_date, solved_state: isSolved }) => {
-          const questionData = {
-            id,
-            username,
-            displayName: username,
-            title,
-            content,
-            date: new Date(publish_date).getTime(),
-            isSolved,
-            isSaved: false,
-          };
-          dispatch(pushQuestion(questionData));
-        });
+        data.forEach(
+          ({ id, author_username, author_display_name, title, content, publish_date, solved_state, is_saved }) => {
+            const questionData = {
+              id,
+              username: author_username,
+              displayName: author_display_name ? author_display_name : author_username,
+              title,
+              content,
+              date: new Date(publish_date).getTime(),
+              isSolved: solved_state,
+              isSaved: is_saved,
+            };
+            dispatch(pushQuestion(questionData));
+          }
+        );
       }
     };
     !isFetching && getQuestions();
@@ -46,8 +48,8 @@ const HomePage = () => {
         "Loading..."
       ) : (
         <Stack pb={4} spacing={4}>
-          {questionsKeys.map((id) => (
-            <NoAnswersQuestion id={id} key={id} />
+          {questionsKeys.map((id, i) => (
+            <NoAnswersQuestion id={id} key={i} />
           ))}
         </Stack>
       )}
