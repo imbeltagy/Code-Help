@@ -7,7 +7,7 @@ const AnswersButton = lazy(() => import("./AnswersButton"));
 const QuestionActions = ({ id, disableModal }) => {
   return (
     <CardActions disableSpacing>
-      <SaveButton id={id} />
+      {/* <SaveButton id={id} /> */}
 
       <CopyLink id={id} />
 
