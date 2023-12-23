@@ -43,6 +43,8 @@ const SaveButton = ({ id }) => {
         }
       };
       callAPI();
+    } else {
+      setIsSignupModalOpen(true);
     }
   };
 

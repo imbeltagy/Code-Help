@@ -39,7 +39,7 @@ export const questionsSlice = createSlice({
   initialState,
   reducers: {
     pushQuestion: (state, { payload: { date: id, ...question } }) => {
-      state.keys.push(id);
+      state.keys = [id, ...state.keys];
       state.savedQuestions[id] = { ...question, date: ms2stringDate(id) };
     },
     modifyQuestion: (state, { payload: { id, newData } }) => {
