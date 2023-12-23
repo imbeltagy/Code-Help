@@ -29,9 +29,9 @@ const AnswerActions = ({ questionId, answerId }) => {
 
   return (
     <Stack justifyContent="center">
-      <IconButton color="primary" sx={{ p: 0, mb: ".5rem" }}>
+      {/* <IconButton color="primary" sx={{ p: 0, mb: ".5rem" }}>
         <EditOutlined color="primary" />
-      </IconButton>
+      </IconButton> */}
       <IconButton color="error" sx={{ p: 0 }} onClick={() => handleDelete()}>
         <DeleteOutlineOutlined color="error" />
       </IconButton>
