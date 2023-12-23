@@ -51,7 +51,7 @@ export const questionsSlice = createSlice({
     removeQuestion: (state, { payload: id }) => {
       delete state.savedQuestions[id];
     },
-    Answers: (state, { payload: { questionId, answers } }) => {
+    pushAnswers: (state, { payload: { questionId, answers } }) => {
       const modifiedAnswers = { ...answers };
 
       // Convert Answers Date To String
@@ -74,6 +74,9 @@ export const questionsSlice = createSlice({
     removeAnswer: (state, { payload: { questionId, answerId } }) => {
       delete state.savedAnswers[questionId][answerId];
     },
+    clearAnswers: (state, { payload: questionId }) => {
+      delete state.savedAnswers[questionId];
+    },
     changeSavedState: (state, action) => {
       // Takes QuestionID and state(boolean)
       state.savedQuestions[action.payload.id].isSaved = action.payload.state;
@@ -92,6 +95,7 @@ export const {
   pushAnswers,
   modifyAnswer,
   removeAnswer,
+  clearAnswers,
   changeSavedState,
   changeSolvedState,
 } = questionsSlice.actions;

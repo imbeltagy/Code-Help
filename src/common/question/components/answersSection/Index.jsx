@@ -2,7 +2,7 @@ import { Alert, CardContent, Stack } from "@mui/material";
 import Answer from "./answer/Index";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { pushAnswers } from "/src/features/questions/questionsSlice";
+import { pushAnswers, clearAnswers } from "/src/features/questions/questionsSlice";
 import fetchApi from "/src/app/fetchApi/Index";
 
 const AnswersSection = ({ id }) => {
@@ -17,6 +17,8 @@ const AnswersSection = ({ id }) => {
     const getAnswers = async () => {
       const res = await fetchApi(`get_question_answers?question_id=${questionId}`, "GET");
       if (res.success) {
+        // Remove old answers
+        dispatch(clearAnswers(id));
         // init and object to get answers
         const answers = {};
         // Refactor Answers keys

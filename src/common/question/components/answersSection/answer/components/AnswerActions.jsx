@@ -10,8 +10,6 @@ const AnswerActions = ({ questionId, answerId }) => {
   const questionApiId = useSelector((state) => state.questions.savedQuestions[questionId].id);
   const answerApiId = useSelector((state) => state.questions.savedAnswers[questionId][answerId].id);
 
-  console.log(questionApiId, answerApiId);
-
   const handleDelete = useCallback(() => {
     // Update UI Before Calling API
     dispatch(removeAnswer({ questionId, answerId }));
