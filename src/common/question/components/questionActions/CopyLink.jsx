@@ -1,43 +1,30 @@
 import { Link } from "@mui/icons-material";
-import { Alert, IconButton, Snackbar, Tooltip } from "@mui/material";
-import { useRef, useState } from "react";
+import { IconButton, Tooltip } from "@mui/material";
+import { useRef } from "react";
+import { open as openNotification } from "/src/features/notification/notificationSlice";
+import { useDispatch } from "react-redux";
 
 const CopyLink = ({ id }) => {
+  const dispatch = useDispatch();
   const ref = useRef();
-  const [open, setOpen] = useState(false);
 
-  const handleClick = () => {
+  const handleCopy = () => {
     ref.current.select();
     document.execCommand("copy");
-    setOpen(true);
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
+    dispatch(openNotification({ message: "Link has been copied successfuly.", type: "success" }));
   };
 
   return (
     <>
       <Tooltip describeChild title="Copy Link">
-        <IconButton variant="contained" onClick={handleClick}>
+        <IconButton variant="contained" onClick={handleCopy}>
           <Link sx={{ rotate: "-45deg" }} />
         </IconButton>
       </Tooltip>
 
-      {/* Alert On Copy */}
-      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          Copied link successfuly.
-        </Alert>
-      </Snackbar>
-
       {/* Input To Hold The Link */}
       <input
-        value={`https://${location.host}/question/${id}`}
+        value={`${location.host}/question/${id}`}
         readOnly
         ref={ref}
         tabIndex="-1"

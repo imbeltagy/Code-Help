@@ -1,32 +1,17 @@
 import { Add, Close } from "@mui/icons-material";
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Divider,
-  Fab,
-  IconButton,
-  InputBase,
-  Modal,
-  Snackbar,
-} from "@mui/material";
+import { Box, Button, Card, CardContent, CardHeader, Divider, Fab, IconButton, InputBase, Modal } from "@mui/material";
 import { useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Signup2Action from "/src/common/signup2action/Index";
 import fetchApi from "/src/app/fetchApi/Index";
-import { useNavigate } from "react-router-dom";
+import { open as openNotification } from "/src/features/notification/notificationSlice";
 
 const QuestionCreator = () => {
   const { username, isLogged } = useSelector((state) => state.user);
   const [open, setOpen] = useState(false);
-  const [alertType, setAlertType] = useState("success");
-  const [openAlert, setOpenAlert] = useState(false);
   const titleInputRef = useRef();
   const textareaRef = useRef();
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleOpen = () => {
     setOpen(true);
@@ -42,14 +27,11 @@ const QuestionCreator = () => {
     const res = await fetchApi("new_question", "POST", data);
 
     if (res.success) {
-      // ==== Save Question State
-      setAlertType("success");
-      setOpenAlert(true);
+      dispatch(openNotification({ message: "Qeustion created successfuly.", type: "success" }));
       setOpen(false);
-      navigate("/");
+      // Save Question State
     } else {
-      setAlertType("error");
-      setOpenAlert(true);
+      dispatch(openNotification({ message: "An error happend. Please try again after a few minutes.", type: "error" }));
     }
   };
 
@@ -62,66 +44,55 @@ const QuestionCreator = () => {
         </Fab>
       </Box>
       {isLogged ? (
-        <>
-          {/* Modal */}
-          <Modal open={open} onClose={() => setOpen(false)}>
-            <Box
-              sx={{
-                width: "min(70rem, 100%)",
-                position: "absolute",
-                inset: "50% 0 0 50%",
-                transform: "translate(-50%, -50%)",
-                paddingInline: 0.5,
-              }}
-            >
-              <Card>
-                <CardHeader
-                  action={
-                    <IconButton aria-label="Close" onClick={() => setOpen(false)}>
-                      <Close />
-                    </IconButton>
-                  }
-                  title="Ask a question"
-                  titleTypographyProps={{ textAlign: "center" }}
-                />
+        <Modal open={open} onClose={() => setOpen(false)}>
+          <Box
+            sx={{
+              width: "min(70rem, 100%)",
+              position: "absolute",
+              inset: "50% 0 0 50%",
+              transform: "translate(-50%, -50%)",
+              paddingInline: 0.5,
+            }}
+          >
+            <Card>
+              <CardHeader
+                action={
+                  <IconButton aria-label="Close" onClick={() => setOpen(false)}>
+                    <Close />
+                  </IconButton>
+                }
+                title="Ask a question"
+                titleTypographyProps={{ textAlign: "center" }}
+              />
+              <Divider />
+              <CardContent>
+                {/* Title */}
+                <Box mb={1}>
+                  <InputBase inputRef={titleInputRef} placeholder="Choose a title" fullWidth />
+                </Box>
+
                 <Divider />
-                <CardContent>
-                  {/* Title */}
-                  <Box mb={1}>
-                    <InputBase inputRef={titleInputRef} placeholder="Choose a title" fullWidth />
-                  </Box>
-
+                {/* Text Area */}
+                <Box mt={1} mb={2}>
+                  <InputBase
+                    inputRef={textareaRef}
+                    placeholder="Write your question..."
+                    fullWidth
+                    minRows={3}
+                    maxRows={20}
+                    multiline
+                  />
                   <Divider />
-                  {/* Text Area */}
-                  <Box mt={1} mb={2}>
-                    <InputBase
-                      inputRef={textareaRef}
-                      placeholder="Write your question..."
-                      fullWidth
-                      minRows={3}
-                      maxRows={20}
-                      multiline
-                    />
-                    <Divider />
-                  </Box>
+                </Box>
 
-                  {/* Post Button */}
-                  <Button onClick={handlePost} variant="contained" fullWidth>
-                    Post
-                  </Button>
-                </CardContent>
-              </Card>
-            </Box>
-          </Modal>
-
-          {/* Alert */}
-          <Snackbar open={openAlert} autoHideDuration={3000} onClose={() => setOpenAlert(false)}>
-            <Alert onClose={() => setOpenAlert(false)} severity={alertType} sx={{ width: "100%" }}>
-              {alertType == "success" ? "Qeustion created successfuly." : null}
-              {alertType == "error" ? "An error happend. Please try again after a few minutes." : null}
-            </Alert>
-          </Snackbar>
-        </>
+                {/* Post Button */}
+                <Button onClick={handlePost} variant="contained" fullWidth>
+                  Post
+                </Button>
+              </CardContent>
+            </Card>
+          </Box>
+        </Modal>
       ) : (
         <Signup2Action text="ask a question" open={open} setOpen={setOpen} />
       )}
