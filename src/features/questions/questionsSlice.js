@@ -77,13 +77,13 @@ export const questionsSlice = createSlice({
     clearAnswers: (state, { payload: questionId }) => {
       delete state.savedAnswers[questionId];
     },
-    changeSavedState: (state, action) => {
+    changeSavedState: (state, { payload: { id, newState } }) => {
       // Takes QuestionID and state(boolean)
-      state.savedQuestions[action.payload.id].isSaved = action.payload.state;
+      state.savedQuestions[id].isSaved = newState;
     },
-    changeSolvedState: (state, action) => {
+    changeSolvedState: (state, { payload: { id, newState } }) => {
       // Takes QuestionID and state(boolean)
-      state.savedQuestions[action.payload.id].isSolved = action.payload.state;
+      state.savedQuestions[id].isSolved = newState;
     },
   },
 });
