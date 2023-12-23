@@ -16,7 +16,8 @@ const HomePage = () => {
     // Get Data From API
     const getQuestions = async () => {
       // Get Latest Questions Count
-      const { success: getQuestionsSuccess, data } = await fetchApi(`latest_questions?count=10`, "GET");
+      // No time to load more question on scroll
+      const { success: getQuestionsSuccess, data } = await fetchApi(`latest_questions?count=50`, "GET");
       if (getQuestionsSuccess) {
         // Save Questions as a State
         data.forEach(
