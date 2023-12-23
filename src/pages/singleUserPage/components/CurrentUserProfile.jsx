@@ -11,58 +11,115 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AvatarPic from "/src/common/avatarPic/Index";
 import { Label } from "@mui/icons-material";
+import fetchApi from "/src/app/fetchApi/Index";
+import { open as openNotification } from "/src/features/notification/notificationSlice";
 
 const CurrentUserProfile = () => {
   const userInfo = useSelector((state) => state.user);
   const [newInfo, setNewInfo] = useState({});
+  const [stateSelectorVal, setStateSelectorVal] = useState("online");
+  const [fetchButtonText, setFetchButtonText] = useState("Save Changes");
   const isButtonsDisabled =
-    Object.keys(newInfo).every((key) => userInfo[key] == newInfo[key]) || Object.keys(newInfo).length == 0;
+    Object.keys(newInfo).every((key) => newInfo[key] == userInfo[key]) || fetchButtonText == "Loading...";
 
-  const { register, handleSubmit } = useForm();
+  const dispatch = useDispatch();
+  const { register, handleSubmit, reset } = useForm();
 
   // Updte Data
   const handleChange = (data) => {
-    setNewInfo({ ...data });
+    setNewInfo({ ...data, state: stateSelectorVal });
+  };
+  const handleChangeState = (e) => {
+    setNewInfo((prev) => ({ ...prev, state: e.target.value }));
+    setStateSelectorVal(e.target.value);
   };
 
   // Send Data To API
-  const onSubmit = (data) => {};
+  const onSubmit = (data) => {
+    const sendData = async () => {
+      // Change Button Text
+      setFetchButtonText("Loading...");
+
+      // Check if the data has been changed before sending
+      const data2send = {};
+
+      // Display Name
+      userInfo.displayName !== data.displayName ? (data2send.newDisplayName = data.displayName) : null;
+
+      // Brief
+      userInfo.brief !== data.brief ? (data2send.newBrief = data.brief) : null;
+
+      // State
+      userInfo.state !== data.state ? (data2send.newState = data.state) : null;
+
+      // Send Data
+      const res = await fetchApi("change_global_info", "PUT", {
+        username: userInfo.username,
+        ...data2send,
+      });
+      if (res.success) {
+        location.reload();
+      } else {
+        // Push Error Notification
+        dispatch(
+          openNotification({
+            type: "error",
+            message: "Error on updating info. Please check your connection try again later.",
+          })
+        );
+      }
+
+      // Change Button Text
+      setFetchButtonText("save changes");
+    };
+    !isButtonsDisabled && sendData();
+  };
+
+  const resetForm = useCallback(() => {
+    reset(); // from useForm()
+    setNewInfo({
+      displayName: userInfo.displayName,
+      brief: userInfo.brief,
+      state: userInfo.state,
+    });
+    setStateSelectorVal(userInfo.state);
+  }, [userInfo]);
+
+  useEffect(() => {
+    resetForm();
+  }, [userInfo]);
 
   // Loading tell getting info from API
-  if (!userInfo.username) return "loading...";
+  if (!newInfo.displayName) return "loading...";
 
   // After Response
   return (
-    <form onSubmit={handleSubmit(onSubmit)} onChange={handleSubmit(handleChange)} onReset={() => setNewInfo({})}>
+    <form onSubmit={handleSubmit(onSubmit)} onChange={handleSubmit(handleChange)} onReset={() => resetForm()}>
       <Stack gap={3}>
         {/* Read Only Data */}
-        <AvatarPic displayName={userInfo.displayName || userInfo.username} variant="rounded" size="6rem" />
+        <AvatarPic displayName={newInfo.displayName} variant="rounded" size="6rem" />
         <TextField
           label="Username"
-          defaultValue={userInfo.username}
+          value={userInfo.username}
           InputProps={{
             readOnly: true,
           }}
         />
 
         {/* Changable Data */}
-        <TextField
-          {...register("displayName")}
-          label="Display Name"
-          defaultValue={userInfo.displayName || userInfo.username}
-        />
-        <FormControl fullWidth>
+        <TextField {...register("displayName")} label="Display Name" value={newInfo.displayName} />
+        <FormControl fullWidth onChange={() => console.log("ss")}>
           <InputLabel id="state-select">State</InputLabel>
           <Select
-            {...register("select")}
+            {...register("state")}
             label="state"
-            defaultValue={"online"}
-            onChange={handleSubmit(handleChange)}
+            value={stateSelectorVal}
+            onChange={handleChangeState}
             labelId="state-select"
           >
             <MenuItem value={"online"}>Online</MenuItem>
@@ -70,7 +127,7 @@ const CurrentUserProfile = () => {
             <MenuItem value={"busy"}>Busy</MenuItem>
           </Select>
         </FormControl>
-        <TextField {...register("brief")} label="Brief" defaultValue={"brief"} multiline rows={5} />
+        <TextField {...register("brief")} label="Brief" value={newInfo.brief} multiline rows={5} />
 
         {/* Buttons */}
         <Box display="flex" flexDirection="row" gap="1rem">
@@ -79,7 +136,7 @@ const CurrentUserProfile = () => {
             Reset
           </Button>
           <Button type="submit" variant="contained" disabled={isButtonsDisabled}>
-            Save Changes
+            {fetchButtonText}
           </Button>
         </Box>
       </Stack>

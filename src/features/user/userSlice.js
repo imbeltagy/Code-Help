@@ -35,6 +35,7 @@ export const userSlice = createSlice({
       const info = action.payload;
       state.displayName = info.display_name ? info.display_name : state.username;
       state.state = info.state;
+      state.brief = info.brief;
       state.notificationsCount = info.notifications_count;
       state.friendsCount = info.friends_count;
       state.savedQuestionsCount = info.saved_questions_count;
