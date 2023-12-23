@@ -9,7 +9,7 @@ import fetchApi from "/src/app/fetchApi/Index";
 const HomePage = () => {
   const dispatch = useDispatch();
   const isFetching = useSelector((state) => state.user.isFetching);
-  const [questionsIDs, setQuestionsIDs] = useState([]);
+  const questionsKeys = useSelector((state) => state.questions.keys);
 
   // Fetch Questions
   useEffect(() => {
@@ -19,7 +19,6 @@ const HomePage = () => {
       const { success: getQuestionsSuccess, data } = await fetchApi(`latest_questions?count=10`, "GET");
       if (getQuestionsSuccess) {
         // Save Questions as a State
-        const IDs = [];
         data.forEach(({ id, author_username: username, title, content, publish_date, solved_state: isSolved }) => {
           const questionData = {
             id,
@@ -31,10 +30,8 @@ const HomePage = () => {
             isSolved,
             isSaved: false,
           };
-          IDs.push(id);
           dispatch(pushQuestion({ id, data: questionData }));
         });
-        setQuestionsIDs(IDs);
       }
     };
     !isFetching && getQuestions();
@@ -45,11 +42,11 @@ const HomePage = () => {
       <QuestionCreator />
 
       {/* Questions */}
-      {questionsIDs.length == 0 ? (
+      {questionsKeys.length == 0 ? (
         "Loading..."
       ) : (
         <Stack pb={4} spacing={4}>
-          {questionsIDs.map((id) => (
+          {questionsKeys.map((id) => (
             <NoAnswersQuestion id={id} key={id} />
           ))}
         </Stack>

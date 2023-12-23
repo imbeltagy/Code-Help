@@ -58,6 +58,20 @@ export const questionsSlice = createSlice({
       let date = state.savedQuestions[id].date;
       date == parseFloat(date) ? (state.savedQuestions[id].date = ms2stringDate(date)) : null;
     },
+    removeQuestion: (state, { payload }) => {
+      delete state.savedQuestions[payload];
+    },
+    replaceQuestionId: (state, { payload: { oldId, newId } }) => {
+      // Change SavedQuestions ID
+      state.savedQuestions = {
+        ...state.savedQuestions,
+        [newId]: state.savedQuestions[oldId],
+      };
+      delete state.savedQuestions[oldId];
+
+      // Change Keys ID
+      state.keys = state.keys.map((key) => (key == oldId ? newId : key));
+    },
     pushAnswers: (state, { payload: { questionId, answers } }) => {
       // Modify Date
       const modifiedAnswers = { ...answers };
@@ -67,8 +81,8 @@ export const questionsSlice = createSlice({
       });
       // Merge Answers Without Duplicating
       state.savedAnswers[questionId] = {
-        ...state.savedAnswers[questionId],
         ...modifiedAnswers,
+        ...state.savedAnswers[questionId],
       };
     },
     replaceAnswerId: (state, { payload: { questionId, oldAnswerId, newAnswerId } }) => {
@@ -92,7 +106,15 @@ export const questionsSlice = createSlice({
   },
 });
 
-export const { pushQuestion, pushAnswers, changeSavedState, changeSolvedState, replaceAnswerId, removeAnswer } =
-  questionsSlice.actions;
+export const {
+  pushQuestion,
+  pushAnswers,
+  changeSavedState,
+  changeSolvedState,
+  replaceAnswerId,
+  removeAnswer,
+  replaceQuestionId,
+  removeQuestion,
+} = questionsSlice.actions;
 
 export default questionsSlice.reducer;
