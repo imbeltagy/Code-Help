@@ -6,12 +6,13 @@ import { Stack, Typography } from "@mui/material";
 import AvatarPic from "/src/common/avatarPic/Index";
 import FriendshipActions from "../users/components/FriendshipActions";
 import CurrentUserProfile from "./components/CurrentUserProfile";
+import QuestionsPreview from "./components/QuestionsPreview";
 
 // Page Component
 const SingleUserPage = () => {
   const { userID } = useParams();
   const [noInfoMessage, setNoInfoMessage] = useState("Loading...");
-  const [userInfo, setUserInfo] = useState();
+  const [userInfo, setUserInfo] = useState({ isFetching: true });
   const { isFetching, username: currentUser } = useSelector((state) => state.user);
 
   const setFriendship = useCallback((val) => {
@@ -23,8 +24,16 @@ const SingleUserPage = () => {
       const res = await fetchAPI(`get_user_info?username=${userID}`, "GET");
 
       if (res.success) {
-        const { display_name, brief, state } = res.data.user_info; // also need friendShip + userQuestions
-        setUserInfo({ displayName: display_name || userID, username: userID, brief, state, friendship: "friends" });
+        const { display_name, brief, state, user_questions } = res.data.user_info; // also need friendShip + userQuestions
+        setUserInfo({
+          displayName: display_name || userID,
+          username: userID,
+          brief,
+          state,
+          friendship: "friends",
+          questions: user_questions ? user_questions : [],
+          isFetching: false,
+        });
       } else {
         setNoInfoMessage("User not exist.");
       }
@@ -61,6 +70,13 @@ const SingleUserPage = () => {
       {userInfo.friendship == "noRelation" ? (
         <FriendshipActions.noRelation selfUser={currentUser} otherUser={userID} setFriendship={setFriendship} />
       ) : null}
+
+      {/* User Questions */}
+      <QuestionsPreview
+        headding="User Questions"
+        questionsIds={userInfo.questions?.map((item) => item.QuestionID)}
+        isFetching={userInfo.isFetching}
+      />
     </Stack>
   );
 };
