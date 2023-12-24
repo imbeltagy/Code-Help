@@ -13,14 +13,18 @@ const Confirm = ({ handleBack, userInfo, handleFinish }) => {
 
     // Get Only Needed Values
     const { username, displayName, brief } = userInfo;
+    const changedData = {
+      newDisplayName: displayName && displayName != "" ? displayName : username,
+      newBrief: brief ? brief : "",
+    };
+    // Send Data
+    const res = await fetchApi("change_global_info", "PUT", {
+      username: userInfo.username,
+      ...changedData,
+    });
 
-    // Send Data To API
-    const changeNameRes = await fetchApi("change_display_name", "PUT", { username, newDisplayName: displayName });
-    const changeBirefRes = await fetchApi("change_brief", "PUT", { username, newBrief: brief });
-    if (changeNameRes.success && changeBirefRes.success) {
-      console.log(changeNameRes, changeBirefRes);
+    if (res.success) {
       setSending(false);
-      navigate("/");
       handleFinish();
     } else {
       setError("Please try after a few minutes. If it continues pleae contact us");

@@ -21,6 +21,7 @@ const Signup = () => {
   const handleFinish = () => {
     dispatch(login({ username: userInfo.username, remember: true }));
     getUserInfo(userInfo.username);
+    navigate("/");
   };
 
   // Redirect to Home page when logged in
