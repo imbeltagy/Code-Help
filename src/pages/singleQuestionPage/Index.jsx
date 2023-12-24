@@ -32,7 +32,7 @@ const SingleQuestionPage = () => {
           displayName: question.author_display_name,
           title: question.question_title,
           content: question.question_content,
-          isSolved: question.solved_state,
+          isSolved: question.is_solved,
           isSaved: false,
         };
         dispatch(pushQuestion(questionData));
