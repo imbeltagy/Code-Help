@@ -21,11 +21,11 @@ const HomePage = () => {
       if (getQuestionsSuccess) {
         // Save Questions as a State
         data.forEach(
-          ({ id, author_username, author_display_name, title, content, publish_date, solved_state, is_saved }) => {
+          ({ id, author_username, author_displayname, title, content, publish_date, solved_state, is_saved }) => {
             const questionData = {
               id,
               username: author_username,
-              displayName: author_display_name ? author_display_name : author_username,
+              displayName: author_displayname,
               title,
               content,
               date: new Date(publish_date).getTime(),
