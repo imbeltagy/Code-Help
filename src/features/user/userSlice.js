@@ -37,7 +37,7 @@ export const userSlice = createSlice({
       state.state = info.state;
       state.brief = info.brief;
       state.notificationsCount = info.notifications_count;
-      state.friendsCount = info.friends_count;
+      state.friends = info.friends;
       state.savedQuestionsCount = info.saved_questions_count;
       state.questions = info.user_questions;
       state.isFetching = false;
@@ -52,9 +52,9 @@ export const getUserInfo = (username) => async (dispatch, getState) => {
   const state = getState().user;
   if (state.isLogged) {
     try {
-      const res = await fetchApi(`get_user_info?username=${username}`, "GET");
+      const res = await fetchApi(`get_user_info?username=${username}&currentUsername=none`, "GET");
       if (res.success) {
-        dispatch(setUserInfo(res.data.user_info)); // Dispatch the action to set user info in the state
+        dispatch(setUserInfo(res.data.user_info));
       } else {
         // Handle API error
       }

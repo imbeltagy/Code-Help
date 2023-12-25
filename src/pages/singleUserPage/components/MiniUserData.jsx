@@ -11,7 +11,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 const MiniUserData = ({ state, displayName }) => {
   return (
-    <Stack marginBlock="1rem" spacing={1} direction="row" alignItems="flex-end">
+    <Stack spacing={1} direction="row" alignItems="flex-end">
       <StyledBadge
         variant="dot"
         color={state === "online" ? "success" : state === "busy" ? "warning" : state === "offline" ? "error" : "error"}

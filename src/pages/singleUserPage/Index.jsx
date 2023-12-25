@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import fetchAPI from "/src/app/fetchAPI/Index";
 import { useSelector } from "react-redux";
-import { Badge, Stack, Typography, styled } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import FriendshipActions from "../users/components/FriendshipActions";
 import CurrentUserProfile from "./components/CurrentUserProfile";
 import QuestionsPreview from "./components/QuestionsPreview";

@@ -2,9 +2,11 @@ import { Card, CardContent, Grid, Typography, Chip, Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import fetchApi from "/src/app/fetchApi/Index";
+import { useSelector } from "react-redux";
 
-const QuestionsPreview = ({ headding, questionsIds, isFetching }) => {
+const QuestionsPreview = ({ headding, questionsIds }) => {
   const [questions, setQuestions] = useState([]);
+  const isFetching = useSelector((state) => state.user.isFetching);
 
   useEffect(() => {
     const getQuestions = async () => {
