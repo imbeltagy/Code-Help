@@ -37,7 +37,7 @@ const Header = () => {
       <Stack direction="row" alignItems="center" gap={1}>
         {isLogged ? (
           <>
-            <Notifications />
+            {/* <Notifications /> */}
             <ProfileButton />
           </>
         ) : (
