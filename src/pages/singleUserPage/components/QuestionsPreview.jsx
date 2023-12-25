@@ -9,10 +9,7 @@ const QuestionsPreview = ({ headding, questionsIds, isFetching }) => {
   useEffect(() => {
     const getQuestions = async () => {
       const ids = questionsIds;
-      const res = await fetchApi(
-        `get_questions?question_id=${ids.join("&question_id=")}&current_user_username=none`,
-        "GET"
-      );
+      const res = await fetchApi(`get_questions?question_id=${ids.join("&question_id=")}`, "GET");
       if (res.success) {
         setQuestions(
           res.data.map((item, i) => ({

@@ -2,11 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import fetchAPI from "/src/app/fetchAPI/Index";
 import { useSelector } from "react-redux";
-import { Stack, Typography } from "@mui/material";
-import AvatarPic from "/src/common/avatarPic/Index";
+import { Badge, Stack, Typography, styled } from "@mui/material";
 import FriendshipActions from "../users/components/FriendshipActions";
 import CurrentUserProfile from "./components/CurrentUserProfile";
 import QuestionsPreview from "./components/QuestionsPreview";
+import MiniUserData from "./components/MiniUserData";
 
 // Page Component
 const SingleUserPage = () => {
@@ -21,16 +21,15 @@ const SingleUserPage = () => {
 
   useEffect(() => {
     const getUsersInfo = async () => {
-      const res = await fetchAPI(`get_user_info?username=${userID}`, "GET");
-
+      const res = await fetchAPI(`get_user_info?username=${userID}&currentUsername=${currentUser}`, "GET");
       if (res.success) {
-        const { display_name, brief, state, user_questions } = res.data.user_info; // also need friendShip + userQuestions
+        const { display_name, brief, state, relation, user_questions } = res.data.user_info;
         setUserInfo({
           displayName: display_name || userID,
           username: userID,
           brief,
           state,
-          friendship: "friends",
+          friendship: relation,
           questions: user_questions ? user_questions : [],
           isFetching: false,
         });
@@ -47,36 +46,41 @@ const SingleUserPage = () => {
   // Error or Loading
   if (!userInfo) return noInfoMessage;
 
+  const actionsProps = {
+    selfUser: currentUser,
+    otherUser: userID,
+    setFriendship: setFriendship,
+  };
+
+  const friendshipAction = () => {
+    switch (userInfo.friendship) {
+      case "friends":
+        return <FriendshipActions.friends {...actionsProps} />;
+      case "pending":
+        return <FriendshipActions.pending {...actionsProps} />;
+      case "requested":
+        return <FriendshipActions.requestedYou {...actionsProps} />;
+      case "noRelation":
+      case "no_relation":
+        return <FriendshipActions.noRelation {...actionsProps} />;
+      default:
+        return null;
+    }
+  };
+
   // User Info if Exist
   return (
     <Stack alignItems="flex-start">
       {/* Avatar & Name */}
-      <Stack marginBlock="1rem" spacing={1} direction="row" alignItems="flex-end">
-        <AvatarPic displayName={userInfo.displayName} variant="rounded" />
-        <Typography variant="h6">{userInfo.displayName}</Typography>
-      </Stack>
+      <MiniUserData state={userInfo.state} displayName={userInfo.displayName} />
+
+      <Typography mb="1rem">{userInfo.brief}</Typography>
 
       {/* Friendship Actions */}
-
-      {userInfo.friendship == "friends" ? (
-        <FriendshipActions.friends selfUser={currentUser} otherUser={userID} setFriendship={setFriendship} />
-      ) : null}
-      {userInfo.friendship == "pending" ? (
-        <FriendshipActions.pending selfUser={currentUser} otherUser={userID} setFriendship={setFriendship} />
-      ) : null}
-      {userInfo.friendship == "requestedYou" ? (
-        <FriendshipActions.requestedYou selfUser={currentUser} otherUser={userID} setFriendship={setFriendship} />
-      ) : null}
-      {userInfo.friendship == "noRelation" ? (
-        <FriendshipActions.noRelation selfUser={currentUser} otherUser={userID} setFriendship={setFriendship} />
-      ) : null}
+      {friendshipAction()}
 
       {/* User Questions */}
-      <QuestionsPreview
-        headding="User Questions"
-        questionsIds={userInfo.questions?.map((item) => item.QuestionID)}
-        isFetching={userInfo.isFetching}
-      />
+      <QuestionsPreview headding="User Questions" questionsIds={userInfo.questions} isFetching={userInfo.isFetching} />
     </Stack>
   );
 };

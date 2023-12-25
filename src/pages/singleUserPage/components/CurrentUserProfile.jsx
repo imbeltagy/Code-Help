@@ -144,11 +144,7 @@ const CurrentUserProfile = () => {
       </form>
 
       {/* User Questions */}
-      <QuestionsPreview
-        headding="User Questions"
-        questionsIds={userInfo.questions.map((item) => item.QuestionID)}
-        isFetching={userInfo.isFetching}
-      />
+      <QuestionsPreview headding="User Questions" questionsIds={userInfo.questions} isFetching={userInfo.isFetching} />
     </>
   );
 };
