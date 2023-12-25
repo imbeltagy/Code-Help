@@ -27,24 +27,11 @@ const Users = () => {
         if (res.success) {
           // Modify object props
           const result = res.data
-            .map(({ display_name: displayName, relation_status, username }) => {
-              let friendshipState = "noRelation";
-
-              switch (relation_status) {
-                case "friend":
-                  friendshipState = "friends";
-                  break;
-                case "friend_request_received": // coflict with naming in api
-                  friendshipState = "pending";
-                  break;
-                case "friend_request_sent": // coflict with naming in api
-                  friendshipState = "requestedYou";
-                  break;
-              }
-              // console.log(username);
-
-              return { displayName, friendshipState, username };
-            })
+            .map(({ display_name: displayName, relation: friendshipState, username }) => ({
+              displayName,
+              friendshipState,
+              username,
+            }))
             .filter(({ username }) => currentUser != username);
 
           // Set Users Info

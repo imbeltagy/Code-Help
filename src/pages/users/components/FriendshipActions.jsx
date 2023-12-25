@@ -3,7 +3,10 @@ import { useCallback, useState } from "react";
 import fetchApi from "/src/app/fetchApi/Index";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { disable, undisable } from "/src/features/friendshipActions/friendshipActionsSlice";
+import {
+  disable as disableActions,
+  undisable as undisableActions,
+} from "/src/features/friendshipActions/friendshipActionsSlice";
 
 const FriendshipActions = () => {};
 
@@ -23,16 +26,19 @@ FriendshipActions.friends = ({ selfUser, otherUser, viewProfile, fullWidth, setF
 
   const removeFriend = async () => {
     // Disable Buttons till request
-    dispatch(disable());
+    dispatch(disableActions());
 
     // Rquest Api
-    const res = await fetchApi("", "");
+    const res = await fetchApi("remove_friend", "DELETE", {
+      self_username: selfUser,
+      friend_username: otherUser,
+    });
 
     if (res.success) {
-      dispatch(undisable());
+      dispatch(undisableActions());
       setFriendship("noRelation");
     } else {
-      dispatch(undisable());
+      dispatch(undisableActions());
     }
   };
 
@@ -53,20 +59,19 @@ FriendshipActions.pending = ({ selfUser, otherUser, viewProfile, fullWidth, setF
 
   const removeSentRequest = async () => {
     // Disable Buttons till request
-    dispatch(disable());
+    dispatch(disableActions());
 
     // Rquest Api
-    const res = await fetchApi("response_request", "POST", {
+    const res = await fetchApi("remove_request", "POST", {
       sender_username: selfUser,
-      responder_username: otherUser,
-      state: "decline",
+      receiver_username: otherUser,
     });
 
     if (res.success) {
-      dispatch(undisable());
+      dispatch(undisableActions());
       setFriendship("noRelation");
     } else {
-      dispatch(undisable());
+      dispatch(undisableActions());
     }
   };
 
@@ -87,24 +92,27 @@ FriendshipActions.requestedYou = ({ selfUser, otherUser, viewProfile, fullWidth,
 
   const acceptRequest = async () => {
     // Disable Buttons till request
-    dispatch(disable());
+    dispatch(disableActions());
 
     // Rquest Api
-    const res = await fetchApi("", "");
+    const res = await fetchApi("response_request", "POST", {
+      sender_username: otherUser,
+      responder_username: selfUser,
+      state: "accept",
+    });
 
     if (res.success) {
-      dispatch(undisable());
-      setFriendship("noRelation");
+      dispatch(undisableActions());
+      setFriendship("friends");
     } else {
-      dispatch(undisable());
+      dispatch(undisableActions());
     }
   };
 
   const declineRequest = async () => {
     // Disable Buttons till request
-    dispatch(disable());
+    dispatch(disableActions());
 
-    // Rquest Api
     // Rquest Api
     const res = await fetchApi("response_request", "POST", {
       sender_username: otherUser,
@@ -113,10 +121,10 @@ FriendshipActions.requestedYou = ({ selfUser, otherUser, viewProfile, fullWidth,
     });
 
     if (res.success) {
-      dispatch(undisable());
+      dispatch(undisableActions());
       setFriendship("noRelation");
     } else {
-      dispatch(undisable());
+      dispatch(undisableActions());
     }
   };
 
@@ -140,7 +148,7 @@ FriendshipActions.noRelation = ({ selfUser, otherUser, viewProfile, fullWidth, s
 
   const addFriend = async () => {
     // Disable Buttons till request
-    dispatch(disable());
+    dispatch(disableActions());
 
     // Rquest Api
     const res = await fetchApi("send_request", "POST", {
@@ -149,10 +157,10 @@ FriendshipActions.noRelation = ({ selfUser, otherUser, viewProfile, fullWidth, s
     });
 
     if (res.success) {
-      dispatch(undisable());
+      dispatch(undisableActions());
       setFriendship("pending");
     } else {
-      dispatch(undisable());
+      dispatch(undisableActions());
     }
   };
 
