@@ -26,7 +26,8 @@ const UserCard = ({ username, displayName, friendshipState }) => {
         return <FriendshipActions.pending {...actionsProps} />;
       case "requested":
         return <FriendshipActions.requestedYou {...actionsProps} />;
-      case "no_relation" || "noRelation":
+      case "noRelation":
+      case "no_relation":
         return <FriendshipActions.noRelation {...actionsProps} />;
       default:
         return null;

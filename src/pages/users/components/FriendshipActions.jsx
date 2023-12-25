@@ -1,5 +1,4 @@
-import { Box, Button, Stack } from "@mui/material";
-import { useCallback, useState } from "react";
+import { Button, Stack } from "@mui/material";
 import fetchApi from "/src/app/fetchApi/Index";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,7 +28,7 @@ FriendshipActions.friends = ({ selfUser, otherUser, viewProfile, fullWidth, setF
     dispatch(disableActions());
 
     // Rquest Api
-    const res = await fetchApi("remove_friend", "DELETE", {
+    const res = await fetchApi("remove_friend", "POST", {
       self_username: selfUser,
       friend_username: otherUser,
     });
